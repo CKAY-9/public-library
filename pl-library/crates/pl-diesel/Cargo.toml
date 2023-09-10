@@ -1,8 +1,11 @@
 [package]
 name = "pl-diesel"
-version = "0.1.0"
-edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+edition.workspace = true
+version.workspace = true
+description.workspace = true
+license.workspace = true
+repository.workspace = true
 
 [dependencies]
+diesel = { version = "2.1.0", features = ["postgres"] }
+dotenvy = "0.15"
