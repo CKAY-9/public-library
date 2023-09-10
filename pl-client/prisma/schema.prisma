@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int      @id @unique @default(autoincrement())
+  username      String
+  token         String
+  finished      String[]
+  reading       String[]
+  going_to_read String[]
+  admin         Boolean  @default(false)
+}
+
+model Config {
+  id                   Int    @id @unique @default(autoincrement())
+  instance_name        String @default("PubLib")
+  instance_description String @default("No description provided")
+  instance_repo        String @default("https://github.com/CKAY-9/public-library")
+}
+
+model Libraries {
+  id   Int    @id @unique @default(autoincrement())
+  key  String
+  host String
+}
