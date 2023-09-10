@@ -1,0 +1,21 @@
+[workspace.package]
+name = "pl-library"
+edition = "2021"
+version = "0.1.0"
+description = "Public Library by CKAY9"
+license = "AGPL-V3.0"
+
+[workspace]
+members = [
+    "crates/pl-diesel"
+]
+
+[package]
+name = "pl-actix"
+edition.workspace = true
+version.workspace = true
+description.workspace = true
+license.workspace = true
+
+[dependencies]
+actix-web = "4.4.0"
