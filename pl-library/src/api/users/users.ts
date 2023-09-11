@@ -1,13 +1,34 @@
-import { Router } from "express";
-import { UserAuthDTO } from "./user.dto";
+import { Request, Router } from "express";
+import { UserAuthDTO } from "./users.dto";
 import { prismaClient } from "../../db/prisma";
 import { SHA256 } from "crypto-js";
 
 export const userRouter = Router();
 
+// Helpers
+export const isUserAdmin = async (req: Request): Promise<boolean> => {
+    const token: string = (req.headers.Authorization as string);
+    
+    if (token === undefined || token.length <= 0) {
+        return false;
+    }
+
+    const user = await prismaClient.libUser.findFirst({
+        "where": {
+            "token": token
+        }
+    });
+
+    if (user === null) {
+        return false
+    }
+    
+    return user.admin;
+}
+
 // Middleware
-const authMiddleware = (req): boolean => {
-    const user = req.body;
+const authMiddleware = (req: Request): boolean => {
+    const user = req.method === "GET" ? req.query : req.body;
     return (user.username !== undefined && user.username.length >= 3 && user.password !== undefined && user.password.length >= 8);
 }
 
@@ -18,7 +39,6 @@ userRouter.use("/new", (req, res, next) => {
     }
     next();
 });
-
 userRouter.use("/login", (req, res, next) => {
     if (req.method !== "GET") return;
     if (!authMiddleware(req)) {
@@ -30,7 +50,6 @@ userRouter.use("/login", (req, res, next) => {
 // Routes
 userRouter.post("/new", async (req, res) => {
     const user: UserAuthDTO = req.body;
-
     const verify = await prismaClient.libUser.findFirst({
         "where": {
             "username": user.username
@@ -42,7 +61,6 @@ userRouter.post("/new", async (req, res) => {
     }
 
     const token = SHA256(user.username + user.password).toString();
-
     const insert = await prismaClient.libUser.create({
         "data": {
             "admin": false,
@@ -50,7 +68,6 @@ userRouter.post("/new", async (req, res) => {
             "username": user.username
         }
     });
-
     return res.status(200).json({"message": "Created library user", "token": token});
 });
 
