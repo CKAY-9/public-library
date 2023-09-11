@@ -3,7 +3,7 @@ import { UserAuthDTO } from "./users.dto";
 import { prismaClient } from "../../db/prisma";
 import { SHA256 } from "crypto-js";
 
-export const userRouter = Router();
+export const usersRouter = Router();
 
 // Helpers
 export const isUserAdmin = async (req: Request): Promise<boolean> => {
@@ -32,14 +32,14 @@ const authMiddleware = (req: Request): boolean => {
     return (user.username !== undefined && user.username.length >= 3 && user.password !== undefined && user.password.length >= 8);
 }
 
-userRouter.use("/new", (req, res, next) => {
+usersRouter.use("/new", (req, res, next) => {
     if (req.method !== "POST") return;
     if (!authMiddleware(req)) {
         return res.status(400).json({"message": "Failed to meet user information criteria"});
     }
     next();
 });
-userRouter.use("/login", (req, res, next) => {
+usersRouter.use("/login", (req, res, next) => {
     if (req.method !== "GET") return;
     if (!authMiddleware(req)) {
         return res.status(400).json({"message": "Failed to meet user information criteria"});
@@ -48,7 +48,8 @@ userRouter.use("/login", (req, res, next) => {
 });
 
 // Routes
-userRouter.post("/new", async (req, res) => {
+usersRouter.post("/new", async (req, res) => {
+    console.log(req.body);
     const user: UserAuthDTO = req.body;
     const verify = await prismaClient.libUser.findFirst({
         "where": {
@@ -71,7 +72,7 @@ userRouter.post("/new", async (req, res) => {
     return res.status(200).json({"message": "Created library user", "token": token});
 });
 
-userRouter.get("/login", async (req, res) => {
+usersRouter.get("/login", async (req, res) => {
     const user: UserAuthDTO = (req.query as any);
     const token = SHA256(user.username + user.password).toString();
 

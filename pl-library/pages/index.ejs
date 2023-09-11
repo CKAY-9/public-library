@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <title>Dashboard</title>
+</head>
+<body>
+    <main class="container">
+        <h1>PubLib: Dashboard</h1>
+        <span>For more information, visit <a href="https://github.com/CKAY-9/public-library">the official repository</a> of Public Library</span>
+        <% if (user === null) { %>
+            <h2>Login</h2>
+            <label for="username">Username</label>
+            <input type="text" name="username" id="usernameInput" />
+            <label for="password">Passowrd</label>
+            <input type="password" name="password" id="passwordInput" />
+            <section>
+                <button id="loginButton">Login</button>
+                <button id="registerButton">Register</button>
+            </section>
+        <% } else { %>
+            <h1>Hello, <%= user.username %></h1>
+            <h2>Your Keys</h2>
+            <% if (keys.length <= 0) { %>
+                <span>None</span>
+            <% } else { %>
+                <% for (let index = 0; index < keys.length; index++) { %>
+                    <div>
+                        
+                    </div>
+                <% } %>
+            <% } %>
+            <button>New</button>
+        <% } %>
+    </main>
+
+    <script src="/static/index.js"></script>
+</body>
+</html>
