@@ -24,7 +24,7 @@ const About = async () => {
                 <p>{info.instance_description}</p>
                 <h1>About PubLib</h1>
                 <p>
-                    PubLib (or Public Library) is a <Link href="https://en.wikipedia.org/wiki/Decentralized_web">decentralized</Link> library system that 
+                    Public Library (or PubLib) is a <Link href="https://en.wikipedia.org/wiki/Decentralized_web">decentralized</Link> library system that 
                     uses <Link href="https://nextjs.org/">NextJS</Link> as a default client.
                 </p>
                 <Link href="https://github.com/CKAY-9/public-library">Official Repository</Link>
