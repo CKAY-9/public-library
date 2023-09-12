@@ -16,6 +16,33 @@ const files = () => {
     document.getElementById("files").style.display = "flex";
 }
 
+const showUpload = () => {
+    document.getElementById("fileUploadPopup").style.display = "flex";
+}
+
+const upload = async () => {
+    const data = new FormData();
+    data.append("title", document.getElementById("newUploadTitle").value);
+    data.append("description", document.getElementById("newUploadDesc").value);
+    data.append("work", document.getElementById("newUploadFile").files[0]);
+    data.append("cover", document.getElementById("newUploadCover").files[0])
+
+    const response = await fetch("/api/files/upload", {
+        "method": "POST",
+        "headers": {
+            "Authorization": getCookie("token")
+        },
+        "body": data
+    });
+    if (response.status === 200) {
+        window.location.reload();
+    }
+}
+
+const cancelFileUpload = () => {
+    document.getElementById("fileUploadPopup").style.display = "none";
+}
+
 const approveKey = async (key) => {
     const response = await fetch("/api/keys/approve", {
         "method": "PUT",
@@ -32,6 +59,24 @@ const approveKey = async (key) => {
     }
 }
 
+const updateInfo = async () => {
+    const response = await fetch("/api/library/update", {
+        "method": "PUT",
+        "headers": {
+            "Content-Type": "application/json",
+            "Authorization": getCookie("token")
+        },
+        "body": JSON.stringify({
+            "name": document.getElementById("libNameInput").value,
+            "description": document.getElementById("libDescInput").value
+        })
+    });
+    if (response.status === 200) {
+        window.location.reload();
+    }
+}
+
 window.onload = () => {
     info();
+    document.getElementById("fileUploadPopup").style.display = "none";
 }

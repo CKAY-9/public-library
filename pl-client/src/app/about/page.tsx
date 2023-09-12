@@ -25,7 +25,7 @@ const About = async () => {
                 <h1>About PubLib</h1>
                 <p>
                     Public Library (or PubLib) is a <Link href="https://en.wikipedia.org/wiki/Decentralized_web">decentralized</Link> library system that 
-                    uses <Link href="https://nextjs.org/">NextJS</Link> as a default client.
+                    uses <Link href="https://nextjs.org/">NextJS</Link> as a default client, and <Link href="https://expressjs.com/">ExpressJS</Link> as the library backend.
                 </p>
                 <Link href="https://github.com/CKAY-9/public-library">Official Repository</Link>
  

@@ -1,15 +1,19 @@
 import Header from "@/components/header/header";
 import { getInstanceInfo } from "@/data/instance";
-import { getLibraryInfo } from "@/data/libraries";
+import { getLibraryContents, getLibraryInfo, libraryFromSlug } from "@/data/libraries";
 import { redirect } from "next/navigation";
+import LibraryContents from "./client";
+import Link from "next/link";
 
 const LibraryServer = async (props: {
     id: number
 }) => {
-    const libraryInfo = await getLibraryInfo(props.id);
+    const libInfo = await getLibraryInfo(props.id);
+    const hostInfo = await libraryFromSlug(props.id);
+    const contents = await getLibraryContents(hostInfo);
     const info = await getInstanceInfo();
 
-    if (libraryInfo === null) {
+    if (libInfo === null) {
         redirect("/");
     }
 
@@ -17,11 +21,14 @@ const LibraryServer = async (props: {
         <>
             <Header instanceInfo={info}></Header>
             <main className="container">
-                <h1>Library: {libraryInfo.name}</h1>
+                <h1>Library: {libInfo.name}</h1>
+                <Link href={hostInfo.host}>Visit Host Site</Link>
                 <div>
-                    <span>Description:</span>
-                    <p>{libraryInfo.description}</p>
+                    <h3>Description</h3>
+                    <p>{libInfo.description}</p>
                 </div>
+                {(contents === null || contents?.length <= 0) && <span>This library has no content!</span>}
+                {(contents !== null && contents.length >= 1) && <LibraryContents host={hostInfo} contents={contents}></LibraryContents>}
             </main>
         </>
     );

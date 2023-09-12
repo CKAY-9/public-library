@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { prismaClient } from "../../db/prisma";
 import { LibInfo } from "@prisma/client";
+import { isUserAdmin } from "../users/users";
+import { UpdateLibDTO } from "./library.dto";
 
 export const libraryRouter = Router();
 
@@ -26,3 +28,21 @@ libraryRouter.get("/info", async (req, res) => {
     const info = await getLibraryInfo();
     return res.status(200).json(info);
 });
+
+libraryRouter.put("/update", async (req, res) => {
+    if (!(await isUserAdmin(req))) {
+        return res.status(401).json({"message": "Insufficient permissions"});
+    }
+
+    const data: UpdateLibDTO = req.body;
+
+    const update = await prismaClient.libInfo.update({
+        "data": {
+            "name": data.name,
+            "description": data.description
+        },
+        "where": {
+            "id": 1
+        }
+    })
+})

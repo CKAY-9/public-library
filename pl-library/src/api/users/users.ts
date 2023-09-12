@@ -49,7 +49,6 @@ usersRouter.use("/login", (req, res, next) => {
 
 // Routes
 usersRouter.post("/new", async (req, res) => {
-    console.log(req.body);
     const user: UserAuthDTO = req.body;
     const verify = await prismaClient.libUser.findFirst({
         "where": {

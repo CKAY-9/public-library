@@ -32,6 +32,13 @@ input:focus, textarea:focus {
     border: 1px solid rgb(255, 255, 255, 0.5);
 }
 
+h1 {
+    margin: 1rem 0;
+}
+h2, h3 {
+    margin: 0;
+}
+
 .container {
     display: flex;
     flex-direction: column;

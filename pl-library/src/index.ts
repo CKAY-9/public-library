@@ -10,15 +10,17 @@ import { getLibraryInfo } from "./api/library/library";
 const app = express();
 
 app.use(cors());
-app.use(bodyParser.json());
+app.use(bodyParser.json({"limit": "50mb"}));
 app.use(cookieParser());
 app.use("/api", apiRouter);
 
 // Dashboard
 app.set("view engine", "ejs");
 app.use("/static", express.static(path.join(__dirname, "../public")))
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")))
 
 app.get("/", async (req, res) => {
+    const libInfo = await getLibraryInfo();
     const user = await prismaClient.libUser.findFirst({
         "where": {
             "token": req.cookies.token || ""
@@ -36,8 +38,9 @@ app.get("/", async (req, res) => {
     }
 
     res.render("../pages/index", {
-        user,
-        "keys": keys
+        "user": user,
+        "keys": keys,
+        "library": libInfo
     });
 });
 

@@ -62,7 +62,7 @@ const AdminConfig = (props: {
                                 "gap": "1rem",
                                 "alignItems": "center"
                             }}>
-                                <label>Library #{lib.id}</label>
+                                <label>Library #{index + 1}</label>
                                 <input type="text" onChange={(e: BaseSyntheticEvent) => libs[index].key = e.target.value} placeholder="Instance Key" defaultValue={lib.key} />
                                 <input type="text" onChange={(e: BaseSyntheticEvent) => libs[index].host = e.target.value} placeholder="Library URL" defaultValue={lib.host} />
                             </div>

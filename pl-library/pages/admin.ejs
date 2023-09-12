@@ -10,6 +10,7 @@
             display: flex;
             flex-direction: column;
             gap: 1rem;
+            height: fit-content;
         }
     </style>
 </head>
@@ -28,7 +29,7 @@
             <input type="text" id="libNameInput" placeholder="Library Name">
             <label>Description</label>
             <textarea id="libDescInput" cols="30" rows="10"></textarea>
-            <button>Update</button>
+            <button onclick="updateInfo()">Update</button>
         </section>
         <section id="keys">
             <h2>Keys</h2>
@@ -49,8 +50,28 @@
         </section>
         <section id="files">
             <h2>Files</h2>
+            <button onclick="showUpload()">Upload New</button>
         </section>
     </main>
+
+    <div class="popup" id="fileUploadPopup">
+        <div class="content" style="height: fit-content; margin-top: 50vh; transform: translateY(-50%);">
+            <h1>File Upload</h1>
+            <label>Title</label>
+            <input type="text" id="newUploadTitle">
+            <label>Description</label>
+            <textarea id="newUploadDesc" cols="30" rows="10"></textarea>
+            <label>File (cannot be empty)</label>
+            <input type="file" name="work" id="newUploadFile">
+            <label>Cover</label>
+            <input type="file" name="cover" id="newUploadCover">
+
+            <section style="flex-direction: row;">
+                <button onclick="upload()">Submit</button>
+                <button onclick="cancelFileUpload()">Cancel</button>
+            </section>
+        </div>
+    </div>
 
     <script src="/static/cookie.js"></script>
     <script src="/static/admin.js"></script>

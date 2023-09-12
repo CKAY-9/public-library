@@ -2,3 +2,5 @@
 /node_modules
 /dist
 /prisma/migrations
+/uploads/*
+!/uploads/INFO.md

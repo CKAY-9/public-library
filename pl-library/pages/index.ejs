@@ -8,7 +8,9 @@
 </head>
 <body>
     <main class="container">
-        <h1>PubLib: Dashboard</h1>
+        <h1><%= library.name %>: Dashboard</h1>
+        <h2>About <%= library.name %></h2>
+        <p><%= library.description %></p>
         <span>For more information, visit <a href="https://github.com/CKAY-9/public-library">the official repository</a> of Public Library</span>
         <% if (user === null) { %>
             <h2>Login</h2>

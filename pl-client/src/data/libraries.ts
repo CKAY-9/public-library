@@ -1,14 +1,35 @@
-import {NextResponse} from "next/server";
 import {prisma} from "./prisma"
 import axios, { AxiosResponse } from "axios";
-import { LibInfo } from "@/app/api/dto";
+import { LibFile, LibInfo } from "@/app/api/dto";
+import { Libraries } from "@prisma/client";
 
 export const getLibraries = async () => {
     return (await prisma.libraries.findMany());
 }
 
+export const libraryFromSlug = async (id: number) => {
+    return (await getLibraries())[id - 1];
+}
+
+export const getLibraryContents = async (lib: Libraries) => {
+    try {
+        const request: AxiosResponse<LibFile[]> = await axios({
+            "url": lib.host + "/api/files/all",
+            "method": "GET",
+            "headers": {
+                "Authorization": lib.key
+            }
+        });
+
+        return request.data;
+    } catch (ex) {
+        console.error(ex);
+        return null;
+    }
+}
+
 export const getLibraryInfo = async (id: number) => {
-    const lib = (await getLibraries())[id - 1];
+    const lib = await libraryFromSlug(id);
 
     try {
         const request: AxiosResponse<LibInfo> = await axios({
