@@ -1,6 +1,6 @@
 import {prisma} from "@/data/prisma";
 import {getSelfWithToken} from "@/data/user";
-import { Libraries } from "@prisma/client";
+import { Library } from "@prisma/client";
 import {NextResponse} from "next/server";
 
 export const PUT = async (request: Request) => {
@@ -8,7 +8,7 @@ export const PUT = async (request: Request) => {
         name: string,
         desc: string,
         repo: string
-        libs: Libraries[]
+        libs: Library[]
     } = await request.json();
     const userToken = request.headers.get("Authorization");
 
@@ -26,7 +26,7 @@ export const PUT = async (request: Request) => {
         return NextResponse.json({"message": "User must be admin to update instance!"});
     }
 
-    const existingLibs = await prisma.libraries.findMany() || []; 
+    const existingLibs = await prisma.library.findMany() || []; 
     const toAppendLibs = req.libs.filter((lib, i) => {
         if (i >= existingLibs.length) {
             return true;
@@ -34,7 +34,7 @@ export const PUT = async (request: Request) => {
         return lib.id === existingLibs[i].id;
     });
     for (let i = 0; i < toAppendLibs.length; i++) {
-        const insert = await prisma.libraries.create({
+        const insert = await prisma.library.create({
             "data": {
                 "host": toAppendLibs[i].host,
                 "key": toAppendLibs[i].key

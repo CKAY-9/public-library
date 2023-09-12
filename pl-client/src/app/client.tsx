@@ -1,6 +1,6 @@
 "use client";
 
-import {Libraries} from "@prisma/client";
+import {Library} from "@prisma/client";
 import axios from "axios";
 import {useEffect, useState} from "react";
 import { LibInfo } from "./api/dto";
@@ -8,7 +8,7 @@ import style from "./index.module.scss";
 import Link from "next/link";
 
 export const LibraryPreview = (props: {
-    lib: Libraries
+    lib: Library
 }) => {
     const [loading, setLoading] = useState<boolean>(true);
     const [libInfo, setLibInfo] = useState<LibInfo | undefined>(undefined);

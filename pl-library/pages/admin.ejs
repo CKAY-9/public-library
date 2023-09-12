@@ -40,7 +40,7 @@
                     <span>Key: <%= keys[index].key %></span>
                     <span>Status: <%= keys[index].approved ? "Approved" : "Awaiting Approval" %></span>
                     <section style="display: flex; flex-direction: row;">
-                        <button>Remove</button>
+                        <button onclick=<%= "removeKey(" + keys[index].id + ")" %>>Remove</button>
                         <% if (!keys[index].approved) { %>
                             <button onclick=<%= "approveKey(" + keys[index].id + ")" %>>Approve</button>
                         <% } %>
@@ -59,12 +59,18 @@
             <h1>File Upload</h1>
             <label>Title</label>
             <input type="text" id="newUploadTitle">
+            <label>Author</label>
+            <input type="text" id="newUploadAuthor">
+            <label>Published</label>
+            <input type="date" id="newUploadDate">
             <label>Description</label>
             <textarea id="newUploadDesc" cols="30" rows="10"></textarea>
-            <label>File (cannot be empty)</label>
-            <input type="file" name="work" id="newUploadFile">
-            <label>Cover</label>
-            <input type="file" name="cover" id="newUploadCover">
+            <section style="display: flex; flex-direction: row; align-items: center;">
+                <label>File (cannot be empty)</label>
+                <input type="file" name="work" id="newUploadFile">
+                <label>Cover</label>
+                <input type="file" name="cover" id="newUploadCover">
+            </section>
 
             <section style="flex-direction: row;">
                 <button onclick="upload()">Submit</button>

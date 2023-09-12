@@ -118,15 +118,11 @@ keysRouter.delete("/remove", async (req, res) => {
         return res.status(401).json({"message": "Insufficient permissions"});
     }
 
-    const key: string = req.body.key;
-
-    if (!(await doesKeyExist(key))) {
-        return res.status(404).json({"message": "Failed to find entry with given key"});
-    }
+    const id: number = req.body.id;
 
     const keyRemove = await prismaClient.key.delete({
         "where": {
-            "key": key
+            "id": id
         }
     });
     return res.status(200).json({"message": "Deleted instance key"});

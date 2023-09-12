@@ -24,7 +24,7 @@ model Config {
   instance_repo        String @default("https://github.com/CKAY-9/public-library")
 }
 
-model Libraries {
+model Library {
   id   Int    @id @unique @default(autoincrement())
   key  String
   host String

@@ -1,11 +1,12 @@
-import LibraryServer from "./server";
 import { getInstanceInfo } from "@/data/instance";
-import { getLibraryInfo } from "@/data/libraries";
 import { Metadata } from "next";
+import WorkServer from "./server";
+import { getLibraryInfo } from "@/data/libraries";
 
 export const generateMetadata = async ({params}: {
     params: {
-        id: number
+        id: number,
+        work: number
     }
 }): Promise<Metadata> => {
     const info = await getInstanceInfo();
@@ -15,15 +16,15 @@ export const generateMetadata = async ({params}: {
         "description": info.instance_description
     }
 }
-
 const LibraryPage = ({params}: {
     params: {
-        id: number
+        id: number,
+        work: number
     }
 }) => {
     return (
         <>
-            <LibraryServer id={params.id}></LibraryServer>
+            <WorkServer work={params.work} id={params.id}></WorkServer>
         </>
     )
 }

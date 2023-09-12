@@ -12,3 +12,11 @@ export interface LibFile {
     cover: string,
     rating: number[]
 }
+
+export interface Comment {
+    id: number,
+    file_id: number,
+    content: string,
+    author: string,
+    posted: Date
+}

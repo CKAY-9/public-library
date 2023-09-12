@@ -10,7 +10,7 @@ export const filesRouter = Router();
 const storage = multer.diskStorage({
     destination: async (req, file, cb) => {
         const data: NewFileDTO = req.body;
-        const path = `uploads/${data.title.replace(" ", "-").toLowerCase() || "_"}`;
+        const path = `uploads/${data.title.split(' ').join("-").toLowerCase() || "_"}-${Math.round(Math.random() * Number.MAX_SAFE_INTEGER)}`;
         if (!existsSync(path)) {
             mkdirSync(path);
         }
@@ -61,7 +61,10 @@ filesRouter.post("/upload", upload.fields([
             "description": uploadData.description,
             "dest": destination,
             "cover": coverDestination,
-            "rating": []
+            "likes": [],
+            "dislikes": [],
+            "author": uploadData.author || "",
+            "published": (uploadData.published === undefined || uploadData.published === 0) ? new Date().toISOString() : new Date(Number.parseInt(uploadData.published.toString())).toISOString()
         }
     });
 
@@ -71,4 +74,14 @@ filesRouter.post("/upload", upload.fields([
 filesRouter.get("/all", async (req, res) => {
     const files = await prismaClient.file.findMany();
     return res.status(200).json(files);
+});
+
+filesRouter.get("/get", async (req, res) => {
+    const id: number = Number.parseInt(req.query.id as string || "0");
+    const file = await prismaClient.file.findUnique({
+        "where": {
+            "id": id
+        }
+    });
+    return res.status(200).json(file);
 });

@@ -9,13 +9,14 @@ const LibraryServer = async (props: {
     id: number
 }) => {
     const libInfo = await getLibraryInfo(props.id);
-    const hostInfo = await libraryFromSlug(props.id);
-    const contents = await getLibraryContents(hostInfo);
-    const info = await getInstanceInfo();
-
+    
     if (libInfo === null) {
         redirect("/");
     }
+
+    const hostInfo = await libraryFromSlug(props.id);
+    const contents = await getLibraryContents(hostInfo);
+    const info = await getInstanceInfo();
 
     return (
         <>
@@ -28,7 +29,7 @@ const LibraryServer = async (props: {
                     <p>{libInfo.description}</p>
                 </div>
                 {(contents === null || contents?.length <= 0) && <span>This library has no content!</span>}
-                {(contents !== null && contents.length >= 1) && <LibraryContents host={hostInfo} contents={contents}></LibraryContents>}
+                {(contents !== null && contents.length >= 1) && <LibraryContents id={props.id} host={hostInfo} contents={contents}></LibraryContents>}
             </main>
         </>
     );

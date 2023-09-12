@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
-import { apiRouter } from "./api/api";
+import { apiRouter, verifyIncomingHost } from "./api/api";
 import { prismaClient } from "./db/prisma";
 import cookieParser from "cookie-parser";
 import path from "path";
@@ -17,7 +17,12 @@ app.use("/api", apiRouter);
 // Dashboard
 app.set("view engine", "ejs");
 app.use("/static", express.static(path.join(__dirname, "../public")))
-app.use("/uploads", express.static(path.join(__dirname, "../uploads")))
+app.use("/uploads", async (req, res) => {
+    if (await verifyIncomingHost(req)) {
+        return express.static(path.join(__dirname, "../uploads"));
+    }
+    return res.send("<h1>Insufficient permissions</h1>");
+});
 
 app.get("/", async (req, res) => {
     const libInfo = await getLibraryInfo();

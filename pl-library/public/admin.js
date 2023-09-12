@@ -24,6 +24,8 @@ const upload = async () => {
     const data = new FormData();
     data.append("title", document.getElementById("newUploadTitle").value);
     data.append("description", document.getElementById("newUploadDesc").value);
+    data.append("author", document.getElementById("newUploadAuthor").value);
+    data.append("published", document.getElementById("newUploadDate").valueAsNumber);
     data.append("work", document.getElementById("newUploadFile").files[0]);
     data.append("cover", document.getElementById("newUploadCover").files[0])
 
@@ -34,6 +36,7 @@ const upload = async () => {
         },
         "body": data
     });
+
     if (response.status === 200) {
         window.location.reload();
     }
@@ -41,6 +44,23 @@ const upload = async () => {
 
 const cancelFileUpload = () => {
     document.getElementById("fileUploadPopup").style.display = "none";
+}
+
+const removeKey = async (key) => {
+    const response = await fetch("/api/keys/remove", {
+        "method": "DELETE",
+        "headers": {
+            "Content-Type": "application/json",
+            "Authorization": getCookie("token")
+        },
+        "body": JSON.stringify({
+            "id": Number.parseInt(key)
+        })
+    });
+
+    if (response.status === 200) {
+        window.location.reload();
+    }
 }
 
 const approveKey = async (key) => {
@@ -54,6 +74,7 @@ const approveKey = async (key) => {
             "id": Number.parseInt(key)
         })
     });
+
     if (response.status === 200) {
         window.location.reload();
     }
@@ -71,6 +92,7 @@ const updateInfo = async () => {
             "description": document.getElementById("libDescInput").value
         })
     });
+
     if (response.status === 200) {
         window.location.reload();
     }

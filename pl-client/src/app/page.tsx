@@ -1,7 +1,7 @@
 import Header from "@/components/header/header";
 import {getInstanceInfo} from "@/data/instance";
 import {getLibraries} from "@/data/libraries";
-import {Libraries} from "@prisma/client";
+import {Library} from "@prisma/client";
 import {Metadata} from "next";
 import {LibraryPreview} from "./client";
 import style from "./index.module.scss";
@@ -25,7 +25,7 @@ const Home = async () => {
                 <h1>Browse</h1>
                 {libraries.length <= 0 ? <h2>No libraries found</h2> : <h2>Libraries</h2>}
                 <div className={style.libraries}>
-                    {libraries.map((lib: Libraries, index: number) => {
+                    {libraries.map((lib: Library, index: number) => {
                         return (
                             <LibraryPreview lib={lib} key={index} />
                         );
