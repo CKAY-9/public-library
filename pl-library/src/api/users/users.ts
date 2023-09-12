@@ -7,7 +7,7 @@ export const usersRouter = Router();
 
 // Helpers
 export const isUserAdmin = async (req: Request): Promise<boolean> => {
-    const token: string = (req.headers.Authorization as string);
+    const token: string = (req.headers.authorization as string);
     
     if (token === undefined || token.length <= 0) {
         return false;

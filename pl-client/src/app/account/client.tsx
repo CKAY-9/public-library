@@ -34,7 +34,8 @@ const AdminConfig = (props: {
             "data": {
                 "name": uName,
                 "desc": uDesc,
-                "repo": uRepo
+                "repo": uRepo,
+                "libs": libs
             },
             "headers": {
                 "Authorization": getCookie("user_token")
@@ -56,10 +57,14 @@ const AdminConfig = (props: {
                     <label>Linked Libraries</label>
                     {libs.map((lib: Libraries, index: number) => {
                         return (
-                            <div key={index}>
+                            <div key={index} style={{
+                                "display": "flex",
+                                "gap": "1rem",
+                                "alignItems": "center"
+                            }}>
                                 <label>Library #{lib.id}</label>
-                                <input type="text" placeholder="Instance Key" defaultValue={lib.key} />
-                                <input type="text" placeholder="Library URL" defaultValue={lib.host} />
+                                <input type="text" onChange={(e: BaseSyntheticEvent) => libs[index].key = e.target.value} placeholder="Instance Key" defaultValue={lib.key} />
+                                <input type="text" onChange={(e: BaseSyntheticEvent) => libs[index].host = e.target.value} placeholder="Library URL" defaultValue={lib.host} />
                             </div>
                         );
                     })}

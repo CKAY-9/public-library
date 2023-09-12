@@ -17,25 +17,33 @@
             <label for="password">Passowrd</label>
             <input type="password" name="password" id="passwordInput" />
             <section>
-                <button id="loginButton">Login</button>
-                <button id="registerButton">Register</button>
+                <button onclick="login()">Login</button>
+                <button onclick="register()">Register</button>
             </section>
         <% } else { %>
             <h1>Hello, <%= user.username %></h1>
+            <% if (user.admin) { %>
+                <a href="/admin">Admin Settings</a>
+            <% } %>
             <h2>Your Keys</h2>
             <% if (keys.length <= 0) { %>
                 <span>None</span>
             <% } else { %>
-                <% for (let index = 0; index < keys.length; index++) { %>
-                    <div>
-                        
-                    </div>
-                <% } %>
+                <div class="keys">
+                    <% for (let index = 0; index < keys.length; index++) { %>
+                        <div class="key">
+                            <span>Key #<%= index + 1 %></span>
+                            <span>Host: <%= keys[index].host %></span>
+                            <span>Key: <%= keys[index].key %></span>
+                        </div>
+                    <% } %>
+                </div>
             <% } %>
-            <button>New</button>
+            <button onclick="appendPopup()">New</button>
         <% } %>
     </main>
 
+    <script src="/static/cookie.js"></script>
     <script src="/static/index.js"></script>
 </body>
 </html>

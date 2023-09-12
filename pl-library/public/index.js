@@ -1,60 +1,67 @@
-const loginButton = document.getElementById("loginButton");
-const registerButton = document.getElementById("registerButton");
+const register = async () => {
+    const response = await fetch("/api/users/new", {
+        "method": "POST",
+        "headers": {
+            "Content-Type": "application/json",
+        },
+        "body": JSON.stringify({
+            "username": document.getElementById("usernameInput").value,
+            "password": document.getElementById("passwordInput").value
+        })
+    });
 
-if (registerButton !== null) {
-    registerButton.onclick = async (e) => {
-        const response = await fetch("/api/users/new", {
-            "method": "POST",
-            "headers": {
-                "Content-Type": "application/json",
-            },
-            "body": JSON.stringify({
-                "username": document.getElementById("usernameInput").value,
-                "password": document.getElementById("passwordInput").value
-            })
-        });
-
-        const result = await response.json();
-        if (result.token !== undefined) {
-            setCookie("token", result.token, 365);
-            window.location.reload();
-        }
+    const result = await response.json();
+    if (result.token !== undefined) {
+        setCookie("token", result.token, 365);
+        window.location.reload();
     }
 }
 
-if (loginButton !== null) {
-    loginButton.onclick = async (e) => {
-        const response = await fetch(`/api/users/new?username=${document.getElementById("usernameInput").value}&password=${document.getElementById("passwordInput").value}`);
-
-        const result = await response.json();
-        if (result.token !== undefined) {
-            setCookie("token", result.token, 365);
-            window.location.reload();
-        }
+const login = async () => {
+    const response = await fetch(`/api/users/new?username=${document.getElementById("usernameInput").value}&password=${document.getElementById("passwordInput").value}`);
+    
+    const result = await response.json();
+    if (result.token !== undefined) {
+        setCookie("token", result.token, 365);
+        window.location.reload();
     }
 }
 
-// Cookies
-// Credit: https://stackoverflow.com/questions/14573223/set-cookie-and-get-cookie-with-javascript
-function setCookie(name,value,days) {
-    var expires = "";
-    if (days) {
-        var date = new Date();
-        date.setTime(date.getTime() + (days*24*60*60*1000));
-        expires = "; expires=" + date.toUTCString();
-    }
-    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+const cancelCreation = () => {
+    document.getElementById("popup").remove();
 }
-function getCookie(name) {
-    var nameEQ = name + "=";
-    var ca = document.cookie.split(';');
-    for(var i=0;i < ca.length;i++) {
-        var c = ca[i];
-        while (c.charAt(0)==' ') c = c.substring(1,c.length);
-        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+
+const createNewKey = async () => {
+    const response = await fetch("/api/keys/generate", {
+        "method": "POST",
+        "headers": {
+            "Content-Type": "application/json",
+            "Authorization": getCookie("token")
+        },
+        "body": JSON.stringify({
+            "host": document.getElementById("newInstanceHost").value
+        })
+    });
+    const data = await response.json();
+    console.log(data);
+    if (response.status === 200) {
+        window.location.reload();
     }
-    return null;
 }
-function eraseCookie(name) {   
-    document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+ 
+const appendPopup = () => {
+    document.body.innerHTML += `
+        <div class="popup" id="popup">
+            <div class="content">
+                <h2>Register Instance Key</h2>
+                <label>Client Host</label>
+                <input type="text" id="newInstanceHost" placeholder="ex: https://myclient.tld" />
+                <span>Once you click generate, you will need to wait for approval by library admins</span>
+                <section>
+                    <button onclick="createNewKey()">Generate</button>
+                    <button onclick="cancelCreation()">Cancel</button>
+                </section>
+            </div>
+        </div>
+    `;
 }

@@ -1,9 +1,15 @@
 import {prisma} from "@/data/prisma";
 import {getSelfWithToken} from "@/data/user";
+import { Libraries } from "@prisma/client";
 import {NextResponse} from "next/server";
 
 export const PUT = async (request: Request) => {
-    const req = await request.json();
+    const req: {
+        name: string,
+        desc: string,
+        repo: string
+        libs: Libraries[]
+    } = await request.json();
     const userToken = request.headers.get("Authorization");
 
     if (userToken === null) {
@@ -20,9 +26,23 @@ export const PUT = async (request: Request) => {
         return NextResponse.json({"message": "User must be admin to update instance!"});
     }
 
-    console.log(req);
+    const existingLibs = await prisma.libraries.findMany() || []; 
+    const toAppendLibs = req.libs.filter((lib, i) => {
+        if (i >= existingLibs.length) {
+            return true;
+        }
+        return lib.id === existingLibs[i].id;
+    });
+    for (let i = 0; i < toAppendLibs.length; i++) {
+        const insert = await prisma.libraries.create({
+            "data": {
+                "host": toAppendLibs[i].host,
+                "key": toAppendLibs[i].key
+            }
+        })
+    }
 
-    const update = await prisma.config.update({
+    const updateInstance = await prisma.config.update({
         "data": {
             "instance_name": {
                 "set": req.name
@@ -38,8 +58,6 @@ export const PUT = async (request: Request) => {
             "id": 1
         }
     });
-
-    console.log(update);
 
     return NextResponse.json({"message": "Updated"});
 }

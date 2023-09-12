@@ -5,6 +5,7 @@ import { apiRouter } from "./api/api";
 import { prismaClient } from "./db/prisma";
 import cookieParser from "cookie-parser";
 import path from "path";
+import { getLibraryInfo } from "./api/library/library";
 
 const app = express();
 
@@ -20,21 +21,47 @@ app.use("/static", express.static(path.join(__dirname, "../public")))
 app.get("/", async (req, res) => {
     const user = await prismaClient.libUser.findFirst({
         "where": {
-            "token": req.cookies.token
+            "token": req.cookies.token || ""
         }
     });
 
-    const keys = await prismaClient.key.findMany({
-        "where": {
-            "owner": user.id || 0
-        }
-    });
+    let keys = [];
+
+    if (user !== null) {
+        keys = await prismaClient.key.findMany({
+            "where": {
+                "owner": user.id
+            }
+        });
+    }
 
     res.render("../pages/index", {
         user,
         "keys": keys
     });
 });
+
+app.get("/admin", async (req, res) => {
+    const user = await prismaClient.libUser.findFirst({
+        "where": {
+            "token": req.cookies.token || ""
+        }
+    });
+
+    if (user === null || !user.admin) {
+        return res.send("<h1>Insufficient permissions</h1>");
+    }
+
+    const info = await getLibraryInfo();
+    const keys = await prismaClient.key.findMany();
+    const files = await prismaClient.file.findMany();
+    res.render("../pages/admin", {
+        user,
+        info,
+        keys,
+        files
+    })
+})
 
 const PORT = Number.parseInt(process.env.LIB_PORT) || 3001;
 app.listen(PORT, () => {

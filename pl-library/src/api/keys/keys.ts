@@ -23,7 +23,7 @@ const doesKeyExist = async (key: string): Promise<boolean> => {
 
 // Routes
 keysRouter.post("/generate", async (req, res) => {
-    const token: string = (req.headers.Authorization as string);
+    const token: string = (req.headers.authorization as string);
 
     if (token === undefined || token.length <= 0) {
         return res.status(401).json({"message": "Failed to get user token"});
@@ -58,7 +58,7 @@ keysRouter.post("/generate", async (req, res) => {
 });
 
 keysRouter.put("/update", async (req, res) => {
-    const token: string = (req.headers.Authorization as string);
+    const token: string = (req.headers.authorization as string);
 
     if (token === undefined || token.length <= 0) {
         return res.status(401).json({"message": "Failed to get user token"});
@@ -99,15 +99,10 @@ keysRouter.put("/approve", async (req, res) => {
         return res.status(401).json({"message": "Insufficient permissions"});
     }
 
-    const key: string = req.body.key;
-
-    if (!(await doesKeyExist(key))) {
-        return res.status(404).json({"message": "Failed to find entry with given key"});
-    }
-
+    const id: number = req.body.id;
     const keyUpdate = await prismaClient.key.update({
         "where": {
-            "key": key
+            "id": id
         },
         "data": {
             "approved": {

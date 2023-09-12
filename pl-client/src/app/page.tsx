@@ -4,6 +4,7 @@ import {getLibraries} from "@/data/libraries";
 import {Libraries} from "@prisma/client";
 import {Metadata} from "next";
 import {LibraryPreview} from "./client";
+import style from "./index.module.scss";
 
 export const generateMetadata = async (): Promise<Metadata> => {
     const info = await getInstanceInfo();
@@ -22,16 +23,14 @@ const Home = async () => {
             <Header instanceInfo={info}></Header>
             <main className="container">
                 <h1>Browse</h1>
-                {libraries.length <= 0 && <h3>No libraries found</h3>}
-                {libraries.map((lib: Libraries, index: number) => {
-                    return (
-                        <>
-                            <h2>Libraries</h2>
+                {libraries.length <= 0 ? <h2>No libraries found</h2> : <h2>Libraries</h2>}
+                <div className={style.libraries}>
+                    {libraries.map((lib: Libraries, index: number) => {
+                        return (
                             <LibraryPreview lib={lib} key={index} />
-                            <h2>All</h2>
-                        </>
-                    );
-                })}
+                        );
+                    })}
+                </div>
             </main>
         </>
     );

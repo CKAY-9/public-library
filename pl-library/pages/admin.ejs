@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <title>Admin Settings</title>
+    <style>
+        section {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <a href="/">Back</a>
+        <h1>Admin Settings</h1>
+        <nav>
+            <button onclick="info()">Library Information</button>
+            <button onclick="keys()">Keys</button>
+            <button onclick="files()">Files</button>
+        </nav>
+        <section id="info">
+            <h2>Information</h2>
+            <label>Name</label>
+            <input type="text" id="libNameInput" placeholder="Library Name">
+            <label>Description</label>
+            <textarea id="libDescInput" cols="30" rows="10"></textarea>
+            <button>Update</button>
+        </section>
+        <section id="keys">
+            <h2>Keys</h2>
+            <% for(let index = 0; index < keys.length; index++) { %>
+                <div class="key" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <span>ID: <%= keys[index].id %></span>
+                    <span>Host: <%= keys[index].host %></span>
+                    <span>Key: <%= keys[index].key %></span>
+                    <span>Status: <%= keys[index].approved ? "Approved" : "Awaiting Approval" %></span>
+                    <section style="display: flex; flex-direction: row;">
+                        <button>Remove</button>
+                        <% if (!keys[index].approved) { %>
+                            <button onclick=<%= "approveKey(" + keys[index].id + ")" %>>Approve</button>
+                        <% } %>
+                    </section>
+                </div>
+            <% } %>
+        </section>
+        <section id="files">
+            <h2>Files</h2>
+        </section>
+    </main>
+
+    <script src="/static/cookie.js"></script>
+    <script src="/static/admin.js"></script>
+    <script>
+        // Fill inputs
+        document.getElementById("libNameInput").value = "<%= info.name %>"
+        document.getElementById("libDescInput").value = "<%= info.description %>"
+    </script>
+</body>
+</html>

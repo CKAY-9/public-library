@@ -37,3 +37,9 @@ model Comment {
   content String
   file_id Int
 }
+
+model LibInfo {
+  id          Int    @id @unique @default(autoincrement())
+  name        String
+  description String
+}
