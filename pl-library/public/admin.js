@@ -1,19 +1,30 @@
+// newurl code: https://stackoverflow.com/questions/10970078/modifying-a-query-string-without-reloading-the-page
+
 const info = () => {
     document.getElementById("info").style.display = "flex";
     document.getElementById("keys").style.display = "none";
     document.getElementById("files").style.display = "none";
+
+    let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + "?tab=info";
+    window.history.pushState({path:newurl}, "", newurl);
 }
 
 const keys = () => {
     document.getElementById("info").style.display = "none";
     document.getElementById("keys").style.display = "flex";
     document.getElementById("files").style.display = "none";
+    
+    let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + "?tab=keys";
+    window.history.pushState({path:newurl}, "", newurl);
 }
 
 const files = () => {
     document.getElementById("info").style.display = "none";
     document.getElementById("keys").style.display = "none";
     document.getElementById("files").style.display = "flex";
+
+    let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + "?tab=files";
+    window.history.pushState({path:newurl}, "", newurl);
 }
 
 const showUpload = () => {
@@ -63,6 +74,23 @@ const removeKey = async (key) => {
     }
 }
 
+const deleteFile = async (id) => {
+    const response = await fetch("/api/files/remove", {
+        "method": "DELETE",
+        "headers": {
+            "Content-Type": "application/json",
+            "Authorization": getCookie("token")
+        },
+        "body": JSON.stringify({
+            "id": Number.parseInt(id)
+        })
+    });
+
+    if (response.status === 200) {
+        window.location.reload();
+    }
+}
+
 const approveKey = async (key) => {
     const response = await fetch("/api/keys/approve", {
         "method": "PUT",
@@ -99,6 +127,18 @@ const updateInfo = async () => {
 }
 
 window.onload = () => {
-    info();
     document.getElementById("fileUploadPopup").style.display = "none";
+
+    const params = new URLSearchParams(window.location.search);
+    switch (params.get("tab")) {
+        case "info":
+            info();
+            break;
+        case "keys":
+            keys();
+            break;
+        case "files":
+            files();
+            break;
+    }
 }

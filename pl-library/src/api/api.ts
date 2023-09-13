@@ -15,10 +15,10 @@ apiRouter.use("/keys", keysRouter);
 apiRouter.use("/library", libraryRouter);
 
 export const verifyIncomingHost = async (req: Request) => {
-    const host = req.headers.host; 
+    const host = req.socket.remoteAddress; 
     const keys = await prismaClient.key.findMany();
     for (let i = 0; i < keys.length; i++) {
-        if (host.includes(keys[i].host)) {
+        if (host.includes(keys[i].host) || host === "::1" || host.includes("localhost") || host.includes("127.0.0.1")) {
             return true;
         }
     }

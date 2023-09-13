@@ -18,7 +18,8 @@ app.use("/api", apiRouter);
 app.set("view engine", "ejs");
 app.use("/static", express.static(path.join(__dirname, "../public")))
 app.use("/uploads", async (req, res) => {
-    if (await verifyIncomingHost(req)) {
+    const check = await verifyIncomingHost(req);
+    if (check) {
         return express.static(path.join(__dirname, "../uploads"));
     }
     return res.send("<h1>Insufficient permissions</h1>");

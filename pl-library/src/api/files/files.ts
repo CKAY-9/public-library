@@ -10,7 +10,7 @@ export const filesRouter = Router();
 const storage = multer.diskStorage({
     destination: async (req, file, cb) => {
         const data: NewFileDTO = req.body;
-        const path = `uploads/${data.title.split(' ').join("-").toLowerCase() || "_"}-${Math.round(Math.random() * Number.MAX_SAFE_INTEGER)}`;
+        const path = `uploads/${data.title.split(' ').join("-").toLowerCase() || "_"}`;
         if (!existsSync(path)) {
             mkdirSync(path);
         }
@@ -25,6 +25,12 @@ const upload = multer({storage});
 
 // Middleware
 filesRouter.use("/upload", async (req, res, next) => {
+    if (!(await isUserAdmin(req))) {
+        return res.status(401).json({"message": "Insufficient permissions"});
+    }
+    next();
+})
+filesRouter.use("/remove", async (req, res, next) => {
     if (!(await isUserAdmin(req))) {
         return res.status(401).json({"message": "Insufficient permissions"});
     }
@@ -69,6 +75,16 @@ filesRouter.post("/upload", upload.fields([
     });
 
     return res.status(200).json({"message": "Uploaded file"});
+});
+
+filesRouter.delete("/remove", async (req, res) => {
+    const id: number = req.body.id;
+    const removeFile = await prismaClient.file.delete({
+        "where": {
+            "id": id
+        }
+    });
+    return res.status(200).json({"message": "Deleted file"});
 });
 
 filesRouter.get("/all", async (req, res) => {

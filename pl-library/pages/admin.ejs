@@ -51,6 +51,23 @@
         <section id="files">
             <h2>Files</h2>
             <button onclick="showUpload()">Upload New</button>
+            <% for(let index = 0; index < files.length; index++) { %>
+                <div class="file">
+                    <span>Title: <%= files[index].title %></span>
+                    <span>Author: <%= files[index].author %></span>
+                    <span>Published: <%= files[index].published %></span>
+                    <span>Description: <%= files[index].description.slice(0, 50) %>...</span>
+                    <section style="display: flex; flex-direction: row; gap: 1rem">
+                        <a href=<%= files[index].dest %>>View File</a>
+                        <% if (files[index].cover !== "") { %>
+                            <a href=<%= files[index].cover %>>View Cover</a>
+                        <% } %>
+                    </section>
+                    <section style="display: flex; flex-direction: row; gap: 1rem">
+                        <button onclick=<%= "deleteFile(" + files[index].id + ")" %>>Delete</button>
+                    </section>
+                </div>
+            <% } %>
         </section>
     </main>
 
