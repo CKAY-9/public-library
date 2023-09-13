@@ -3,9 +3,20 @@
 import {Library} from "@prisma/client";
 import axios from "axios";
 import {useEffect, useState} from "react";
-import { LibInfo } from "./api/dto";
+import { LibInfo, Profile } from "./api/dto";
 import style from "./index.module.scss";
 import Link from "next/link";
+
+export const UserPreview = (props: {
+    user: Profile
+}) => {
+    return (
+        <Link href={`/profile/${props.user.id}`} className={style.user}>
+            <h3>{props.user.username}</h3>
+            {props.user.admin && <span style={{"color": "red"}}>Admin</span>}
+        </Link>
+    )
+}
 
 export const LibraryPreview = (props: {
     lib: Library

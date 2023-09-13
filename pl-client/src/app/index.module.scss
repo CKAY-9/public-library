@@ -1,9 +1,9 @@
-.libraries {
+.libraries, .users {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 300px));
 }
 
-.library {
+.library, .user {
     display: flex;
     flex-direction: column;
     background-color: rgb(var(--800));

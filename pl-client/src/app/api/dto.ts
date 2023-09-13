@@ -4,6 +4,15 @@ export interface LibInfo {
     description: string
 }
 
+export interface Profile {
+    id: number,
+    username: string,
+    finished: string[],
+    reading: string[],
+    going_to_read: string[],
+    admin: boolean
+}
+
 export interface LibFile {
     id: number,
     dest: string,
