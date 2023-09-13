@@ -9,8 +9,21 @@ interface IncomingReq {
 
 export const GET = async (request: Request) => {
     try {
-        const req: IncomingReq = await request.json();
-        const hostInfo = await libraryFromSlug(req.host);
+        const url = new URL(request.url);
+        const req = url.searchParams;
+        const host: number = Number.parseInt(req.get("host") || "0");
+
+        if (host === 0) {
+            return NextResponse.json([]);
+        }
+
+        const fileID: number = Number.parseInt(req.get("file_id") || "0");
+
+        if (fileID === 0) {
+            return NextResponse.json([]);
+        }        
+
+        const hostInfo = await libraryFromSlug(host);
 
         const getComments = await axios({
             "url": hostInfo.host + "/api/comments/get",
@@ -19,7 +32,7 @@ export const GET = async (request: Request) => {
                 "Authorization": hostInfo.key
             },
             "params": {
-                "file_id": req.file_id
+                "file_id": fileID
             }
         });
     

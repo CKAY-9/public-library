@@ -20,3 +20,9 @@ export interface Comment {
     author: string,
     posted: Date
 }
+
+export interface NewComment {
+    host: number,
+    file_id: number,
+    content: string
+}

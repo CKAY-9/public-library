@@ -1,10 +1,11 @@
 "use client"
 
-import { LibFile } from "@/app/api/dto";
-import { useEffect, useState } from "react";
+import { Comment, LibFile } from "@/app/api/dto";
+import { BaseSyntheticEvent, useEffect, useState } from "react";
 import style from "./work.module.scss";
 import axios from "axios";
-import { Library } from "@prisma/client";
+import { getCookie } from "@/utils/cookies";
+import Link from "next/link";
 
 const Comments = (props: {
     content: LibFile,
@@ -12,11 +13,12 @@ const Comments = (props: {
 }) => {
     const [comments, setComments] = useState<Comment[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
+    const [newCommentContent, setNewCommentContent] = useState<string>("");
 
     useEffect(() => {
         (async() => {
             const request = await axios({
-                "url": "/api/libs/get/comments",
+                "url": "/api/libs/comments/get",
                 "method": "GET",
                 "params": {
                     "host": props.id,
@@ -27,7 +29,32 @@ const Comments = (props: {
             setComments(request.data);
             setLoading(false);
         })();
-    })
+    }, []);
+
+    const newComment = async (e: BaseSyntheticEvent) => {
+        e.preventDefault();
+
+        if (newCommentContent.length <= 0) {
+            return;
+        }
+
+        const request = await axios({
+            "url": "/api/libs/comments/post",
+            "method": "POST",
+            "headers": {
+                "Authorization": getCookie("user_token")
+            },
+            "data": {
+                "host": props.id,
+                "file_id": props.content.id,
+                "content": newCommentContent
+            }
+        });
+
+        if (request.data.message !== undefined) {
+            window.location.reload();
+        }
+    }
     
     if (loading) {
         return (
@@ -39,11 +66,21 @@ const Comments = (props: {
         <div className={style.comments}>
             <div className={style.newComment}>
                 <label>New Comment</label>
-                <textarea placeholder="Your Comment" />
-                <button>Post</button>
+                <textarea onChange={(e: BaseSyntheticEvent) => setNewCommentContent(e.target.value)} placeholder="Your Comment" />
+                <button onClick={newComment}>Post</button>
             </div>
             {comments.length <= 0 ? <span>This entry has no comments.</span> :
                 <>
+                    {comments.map((comment: Comment, index: number) => {
+                        return (
+                            <div className={style.comment} key={index}>
+                                <span className={style.author}>
+                                    Posted by: {comment.author.split("@")[0]}@<Link href={comment.author.split("@")[1]}>{comment.author.split("@")[1]}</Link>
+                                </span>
+                                <p>{comment.content}</p>
+                            </div>
+                        )
+                    })}
                 </>
             }
         </div>
