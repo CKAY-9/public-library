@@ -1,0 +1,30 @@
+version: '3.7'
+
+networks:
+  lib_net: {}
+
+services:
+  psdb:
+    container_name: psdb
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=pl-library
+    networks:
+      - lib_net
+  
+  library:
+    restart: always
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@psdb/pl-library
+    depends_on:
+      - psdb
+    build: ./
+    ports:
+      - 3001:3001
+    networks:
+      - lib_net

@@ -2,7 +2,6 @@
 import {SHA256} from "crypto-js";
 import {BaseSyntheticEvent, use, useState} from "react";
 import axios from "axios";
-import {redirect} from "next/navigation";
 import {setCookie} from "@/utils/cookies";
 
 const AuthorizationClient = () => {

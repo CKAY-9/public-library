@@ -1,6 +1,7 @@
 import Header from "@/components/header/header";
 import {getInstanceInfo} from "@/data/instance";
 import AuthorizationClient from "./client";
+import { Metadata } from "next";
 
 export const generateMetadata = async (): Promise<Metadata> => {
     const info = await getInstanceInfo();

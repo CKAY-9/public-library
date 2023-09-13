@@ -1,7 +1,7 @@
 "use client";
 
 import {getCookie} from "@/utils/cookies";
-import {Config, Libraries, User} from "@prisma/client";
+import {Config, Library, User} from "@prisma/client";
 import axios from "axios";
 import {BaseSyntheticEvent, useEffect, useState} from "react";
 
@@ -11,7 +11,7 @@ const AdminConfig = (props: {
     const [uName, setUName] = useState<string>(props.instanceInfo.instance_name);
     const [uDesc, setUDesc] = useState<string>(props.instanceInfo.instance_description);
     const [uRepo, setURepo] = useState<string>(props.instanceInfo.instance_repo);
-    const [libs, setLibs] = useState<Libraries[]>([]);
+    const [libs, setLibs] = useState<Library[]>([]);
     const [libLoading, setLibLoading] = useState<boolean>(true);
 
     useEffect(() => {
@@ -55,7 +55,7 @@ const AdminConfig = (props: {
             {libLoading ? <label>Loading Linked Libraries</label> : 
                 <>
                     <label>Linked Libraries</label>
-                    {libs.map((lib: Libraries, index: number) => {
+                    {libs.map((lib: Library, index: number) => {
                         return (
                             <div key={index} style={{
                                 "display": "flex",

@@ -2,13 +2,13 @@
 
 import style from "./lib.module.scss";
 import { LibFile } from "@/app/api/dto"
-import { Libraries } from "@prisma/client"
+import { Library } from "@prisma/client"
 import Image from "next/image"
 import Link from "next/link";
 
 const LibraryContents = (props: {
     contents: LibFile[],
-    host: Libraries,
+    host: Library,
     id: number
 }) => {
     return (

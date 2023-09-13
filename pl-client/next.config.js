@@ -11,7 +11,8 @@ const nextConfig = {
                 "protocol": "https"
             }
         ]
-    }
+    },
+    "output": "standalone"
 }
 
 module.exports = nextConfig
