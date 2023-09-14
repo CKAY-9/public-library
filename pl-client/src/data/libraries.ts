@@ -11,6 +11,15 @@ export const libraryFromSlug = async (id: number) => {
     return (await getLibraries())[id - 1];
 }
 
+export const libraryFromID = async (id: number) => {
+    const lib = await prisma.library.findUnique({
+        "where": {
+            "id": id
+        }
+    });
+    return lib;
+}
+
 export const getLibraryEntry = async (libHost: Library, id: number): Promise<LibFile | null> => {
     try {
         const request: AxiosResponse<LibFile> = await axios({

@@ -13,13 +13,19 @@ export interface Profile {
     admin: boolean
 }
 
+export interface AddToUserLibrary {
+    work: number,
+    server: number
+}
+
 export interface LibFile {
     id: number,
     dest: string,
     title: string,
     description: string,
     cover: string,
-    rating: number[]
+    likes: string[],
+    dislikes: string[]
 }
 
 export interface Comment {

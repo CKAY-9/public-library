@@ -93,6 +93,51 @@ const WorkClient = (props: {
 }) => {
     const [view, setView] = useState<number>(0);
 
+    const setFinished = async (e: BaseSyntheticEvent) => {
+        e.preventDefault();
+        const request = await axios({
+            "url": "/api/user/reading/finished",
+            "method": "POST",
+            "headers": {
+                "Authorization": getCookie("user_token") || ""
+            },
+            "data": {
+                "work": Number.parseInt(props.content.id.toString()),
+                "server": Number.parseInt(props.id.toString())
+            }
+        });
+    }
+
+    const setGoingToRead = async (e: BaseSyntheticEvent) => {
+        e.preventDefault();
+        const request = await axios({
+            "url": "/api/user/reading/gtr",
+            "method": "POST",
+            "headers": {
+                "Authorization": getCookie("user_token") || ""
+            },
+            "data": {
+                "work": Number.parseInt(props.content.id.toString()),
+                "server": Number.parseInt(props.id.toString())
+            }
+        });
+    }
+
+    const setReading = async (e: BaseSyntheticEvent) => {
+        e.preventDefault();
+        const request = await axios({
+            "url": "/api/user/reading/reading",
+            "method": "POST",
+            "headers": {
+                "Authorization": getCookie("user_token") || ""
+            },
+            "data": {
+                "work": Number.parseInt(props.content.id.toString()),
+                "server": Number.parseInt(props.id.toString())
+            }
+        });
+    }
+
     return (
         <>
             <section style={{"display": "flex", "gap": "1rem"}}>
@@ -100,9 +145,9 @@ const WorkClient = (props: {
                 <span>Dislikes: {0}</span>
             </section>
             <section style={{ "display": "flex", "gap": "1rem" }}>
-                <button onClick={() => setView(0)}>Finished</button>
-                <button onClick={() => setView(1)}>Reading</button>
-                <button onClick={() => setView(0)}>Going to Read</button>
+                <button onClick={setFinished}>Finished</button>
+                <button onClick={setReading}>Reading</button>
+                <button onClick={setGoingToRead}>Going to Read</button>
             </section>
             <nav style={{
                 "display": "flex",

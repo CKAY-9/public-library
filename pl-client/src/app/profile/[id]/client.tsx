@@ -2,7 +2,12 @@
 
 import { LibFile, Profile } from "@/app/api/dto";
 import axios from "axios";
+import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
+import style from "./profile.module.scss";
+import libStyle from "../../library/[id]/lib.module.scss";
+import { lib } from "crypto-js";
 
 const WorkPreview = (props: {
     work: string
@@ -38,8 +43,17 @@ const WorkPreview = (props: {
     }
 
     return (
-        <div>
-        </div>
+        <Link href="/" className={libStyle.work}>
+            {work.cover !== "" &&
+                <Image src={``} alt={"Cover"} sizes="100%" width={0} height={0} />
+            }
+            <section style={{"display": "flex", "justifyContent": "space-between"}}>
+            <span>Likes: {work.likes.length}</span>
+            <span>Dislikes: {work.dislikes.length}</span>
+            </section>
+            <h3>{work.title}</h3>
+            <p>{work.description.slice(0, 75 > work.description.length ? work.description.length : 75)}...</p>
+        </Link>
     );
 }
 
@@ -50,27 +64,33 @@ const ProfileClient = (props: {
         <>
             {props.profile.finished.length >= 1 && <>
                 <h2>Finished</h2>
-                {props.profile.finished.map((entry: string, index: number) => {
-                    return (
-                        <WorkPreview key={index} work={entry} />
-                    )
-                })}
+                <div className={libStyle.works}>
+                    {props.profile.finished.map((entry: string, index: number) => {
+                        return (
+                            <WorkPreview key={index} work={entry} />
+                        );
+                    })}
+                </div>
             </>}
             {props.profile.reading.length >= 1 && <>
                 <h2>Reading</h2>
-                {props.profile.reading.map((entry: string, index: number) => {
-                    return (
-                        <WorkPreview key={index} work={entry} />
-                    )
-                })}
+                <div className={libStyle.works}>
+                    {props.profile.reading.map((entry: string, index: number) => {
+                        return (
+                            <WorkPreview key={index} work={entry} />
+                        );
+                    })}
+                </div>
             </>}
             {props.profile.going_to_read.length >= 1 && <>
                 <h2>Going to Read</h2>
-                {props.profile.going_to_read.map((entry: string, index: number) => {
-                    return (
-                        <WorkPreview key={index} work={entry} />
-                    )
-                })}
+                <div className={libStyle.works}>
+                    {props.profile.going_to_read.map((entry: string, index: number) => {
+                        return (
+                            <WorkPreview key={index} work={entry} />
+                        );
+                    })}
+                </div>
             </>}
         </>
     );
