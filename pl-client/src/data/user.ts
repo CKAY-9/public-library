@@ -10,7 +10,7 @@ export const getToken = (): string | null => {
 export const getSelfWithToken = async (token: string): Promise<User | null> => {
     const user = await prisma.user.findFirst({
         "where": {
-            "token": token
+            "token": token || ""
         }
     });
 

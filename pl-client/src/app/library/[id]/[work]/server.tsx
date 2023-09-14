@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import style from "./work.module.scss";
 import Link from "next/link";
 import WorkClient from "./client";
+import { getSelfWithToken, getToken } from "@/data/user";
 
 const WorkServer = async (props: {
     id: number,
@@ -24,11 +25,12 @@ const WorkServer = async (props: {
         redirect(`/library/${props.id}`);
     }
 
+    const user = await getSelfWithToken(getToken() || "");
     const info = await getInstanceInfo();
 
     return (
         <>
-            <Header instanceInfo={info}></Header>
+            <Header user={user} instanceInfo={info}></Header>
             <main className="container">
                 <div className={style.work}>
                     {content.cover !== "" && 

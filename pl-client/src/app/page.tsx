@@ -5,7 +5,7 @@ import {Library} from "@prisma/client";
 import {Metadata} from "next";
 import {LibraryPreview, UserPreview} from "./client";
 import style from "./index.module.scss";
-import { getProfiles } from "@/data/user";
+import { getProfiles, getSelfWithToken, getToken } from "@/data/user";
 import { Profile } from "./api/dto";
 
 export const generateMetadata = async (): Promise<Metadata> => {
@@ -20,10 +20,11 @@ const Home = async () => {
     const info = await getInstanceInfo();
     const libraries = await getLibraries();
     const users = await getProfiles();
+    const user = await getSelfWithToken(getToken() || "");
 
     return (
         <>
-            <Header instanceInfo={info}></Header>
+            <Header user={user} instanceInfo={info}></Header>
             <main className="container">
                 <h1>Browse</h1>
                 {libraries.length <= 0 ? <h2>No libraries found</h2> : <h2>Libraries</h2>}

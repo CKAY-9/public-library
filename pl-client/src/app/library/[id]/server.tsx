@@ -4,6 +4,7 @@ import { getLibraryContents, getLibraryInfo, libraryFromSlug } from "@/data/libr
 import { redirect } from "next/navigation";
 import LibraryContents from "./client";
 import Link from "next/link";
+import { getSelfWithToken, getToken } from "@/data/user";
 
 const LibraryServer = async (props: {
     id: number
@@ -17,10 +18,11 @@ const LibraryServer = async (props: {
     const hostInfo = await libraryFromSlug(props.id);
     const contents = await getLibraryContents(hostInfo);
     const info = await getInstanceInfo();
+    const user = await getSelfWithToken(getToken() || "");
 
     return (
         <>
-            <Header instanceInfo={info}></Header>
+            <Header user={user} instanceInfo={info}></Header>
             <main className="container">
                 <h1>Library: {libInfo.name}</h1>
                 <Link href={hostInfo.host}>Visit Host Site</Link>

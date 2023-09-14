@@ -2,6 +2,8 @@ import Header from "@/components/header/header";
 import {getInstanceInfo} from "@/data/instance";
 import AuthorizationClient from "./client";
 import { Metadata } from "next";
+import { getSelfWithToken, getToken } from "@/data/user";
+import { redirect } from "next/navigation";
 
 export const generateMetadata = async (): Promise<Metadata> => {
     const info = await getInstanceInfo();
@@ -13,10 +15,15 @@ export const generateMetadata = async (): Promise<Metadata> => {
 
 const Authorization = async () => {
     const info = await getInstanceInfo();
+    const user = await getSelfWithToken(getToken() || "");
+
+    if (user !== null) {
+        redirect("/");
+    }
 
     return (
         <>
-            <Header instanceInfo={info}></Header>
+            <Header user={user} instanceInfo={info}></Header>
             <main className="container">
                 <AuthorizationClient />
             </main>

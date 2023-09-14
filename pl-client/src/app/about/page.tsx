@@ -1,5 +1,6 @@
 import Header from "@/components/header/header";
 import {getInstanceInfo} from "@/data/instance";
+import { getSelfWithToken, getToken } from "@/data/user";
 import {Metadata} from "next";
 import Link from "next/link";
 
@@ -13,10 +14,11 @@ export const generateMetadata = async (): Promise<Metadata> => {
 
 const About = async () => {
     const info = await getInstanceInfo();
+    const user = await getSelfWithToken(getToken() || "");
 
     return (
         <>
-            <Header instanceInfo={info}></Header>
+            <Header user={user} instanceInfo={info}></Header>
             <main className="container">
                 <h1>About This Instance</h1>
                 <span>Name: {info.instance_name}</span>

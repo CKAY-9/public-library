@@ -1,6 +1,6 @@
 import Header from "@/components/header/header";
 import { getInstanceInfo } from "@/data/instance";
-import { getProfile } from "@/data/user";
+import { getProfile, getSelfWithToken, getToken } from "@/data/user";
 import { redirect } from "next/navigation";
 import ProfileClient from "./client";
 
@@ -13,10 +13,12 @@ const ProfileServer = async (props: {
     if (profile === null) {
         redirect("/");
     }
+
+    const user = await getSelfWithToken(getToken() || "");
     
     return (
         <>
-            <Header instanceInfo={info}></Header>
+            <Header user={user} instanceInfo={info}></Header>
             <main className="container">
                 <h1>{profile.username}</h1>
                 {profile.admin && <h3 style={{"color": "red"}}>Admin</h3>}

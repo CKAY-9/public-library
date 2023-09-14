@@ -15,11 +15,14 @@ export const generateMetadata = async (): Promise<Metadata> => {
 
 const Account = async () => {
     const info = await getInstanceInfo();
+
     if (getToken() === null) {
         redirect("/account/auth"); 
         return;
     }
+
     const user = await getSelfWithToken(getToken() || "");
+
     if (user === null) {
         redirect("/account/auth");
         return;
@@ -27,7 +30,7 @@ const Account = async () => {
 
     return (
         <>
-            <Header instanceInfo={info}></Header>
+            <Header user={user} instanceInfo={info}></Header>
             <main className="container">
                 <AccountClient instanceInfo={info} userInfo={user}></AccountClient>
             </main>
