@@ -22,10 +22,20 @@ export interface LibFile {
     id: number,
     dest: string,
     title: string,
+    author: string,
+    published: Date,
     description: string,
     cover: string,
     likes: string[],
     dislikes: string[]
+}
+
+export interface LibFileFetch {
+    entry: LibFile,
+    hostData: {
+        host: string,
+        id: number
+    }
 }
 
 export interface Comment {

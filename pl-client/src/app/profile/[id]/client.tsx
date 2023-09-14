@@ -1,19 +1,16 @@
 "use client"
 
-import { LibFile, Profile } from "@/app/api/dto";
+import { LibFileFetch, Profile } from "@/app/api/dto";
 import axios from "axios";
-import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useState } from "react";
-import style from "./profile.module.scss";
+import WorkPreview from "@/components/work/preview";
 import libStyle from "../../library/[id]/lib.module.scss";
-import { lib } from "crypto-js";
 
-const WorkPreview = (props: {
+const WorkPreviewProf = (props: {
     work: string
 }) => {
     const [loading, setLoading] = useState<boolean>(false);
-    const [work, setWork] = useState<LibFile>();
+    const [work, setWork] = useState<LibFileFetch>();
 
     useEffect(() => {
         (async () => {
@@ -43,17 +40,11 @@ const WorkPreview = (props: {
     }
 
     return (
-        <Link href="/" className={libStyle.work}>
-            {work.cover !== "" &&
-                <Image src={``} alt={"Cover"} sizes="100%" width={0} height={0} />
-            }
-            <section style={{"display": "flex", "justifyContent": "space-between"}}>
-            <span>Likes: {work.likes.length}</span>
-            <span>Dislikes: {work.dislikes.length}</span>
-            </section>
-            <h3>{work.title}</h3>
-            <p>{work.description.slice(0, 75 > work.description.length ? work.description.length : 75)}...</p>
-        </Link>
+        <WorkPreview file={work.entry} host={{
+            "host": work.hostData.host,
+            "id": work.hostData.id,
+            "key": ""
+        }}></WorkPreview>
     );
 }
 
@@ -67,7 +58,7 @@ const ProfileClient = (props: {
                 <div className={libStyle.works}>
                     {props.profile.finished.map((entry: string, index: number) => {
                         return (
-                            <WorkPreview key={index} work={entry} />
+                            <WorkPreviewProf key={index} work={entry} />
                         );
                     })}
                 </div>
@@ -77,7 +68,7 @@ const ProfileClient = (props: {
                 <div className={libStyle.works}>
                     {props.profile.reading.map((entry: string, index: number) => {
                         return (
-                            <WorkPreview key={index} work={entry} />
+                            <WorkPreviewProf key={index} work={entry} />
                         );
                     })}
                 </div>
@@ -87,7 +78,7 @@ const ProfileClient = (props: {
                 <div className={libStyle.works}>
                     {props.profile.going_to_read.map((entry: string, index: number) => {
                         return (
-                            <WorkPreview key={index} work={entry} />
+                            <WorkPreviewProf key={index} work={entry} />
                         );
                     })}
                 </div>

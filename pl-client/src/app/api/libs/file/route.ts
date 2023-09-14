@@ -28,7 +28,13 @@ export const GET = async (request: Request) => {
         }
 
         const entry = await getLibraryEntry(host, fileID);
-        return NextResponse.json(entry);
+        return NextResponse.json({
+            "entry": entry,
+            "hostData": {
+                "host": host.host,
+                "id": host.id
+            }
+        });
     } catch (ex) {
 
     }

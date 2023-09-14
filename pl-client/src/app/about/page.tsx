@@ -1,6 +1,8 @@
 import Header from "@/components/header/header";
 import {getInstanceInfo} from "@/data/instance";
+import { getLibraries } from "@/data/libraries";
 import { getSelfWithToken, getToken } from "@/data/user";
+import { Library } from "@prisma/client";
 import {Metadata} from "next";
 import Link from "next/link";
 
@@ -15,6 +17,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
 const About = async () => {
     const info = await getInstanceInfo();
     const user = await getSelfWithToken(getToken() || "");
+    const linkedLibraries = await getLibraries();
 
     return (
         <>
@@ -23,6 +26,16 @@ const About = async () => {
                 <h1>About This Instance</h1>
                 <span>Name: {info.instance_name}</span>
                 <span>Repository: <Link href={info.instance_repo}>{info.instance_repo}</Link></span>
+                <span>Linked Libraries:</span>
+                {linkedLibraries.length >= 1 &&
+                    <>
+                        {linkedLibraries.map((lib: Library, index: number) => {
+                            return (
+                                <li><Link href={lib.host}>{lib.host}</Link></li>
+                            )
+                        })}
+                    </>
+                }
                 <p>{info.instance_description}</p>
                 <h1>About PubLib</h1>
                 <p>

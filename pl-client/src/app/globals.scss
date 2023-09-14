@@ -8,6 +8,15 @@
     --text: 255, 255, 255;
 }
 
+@media (prefers-color-scheme: light) {
+    :root {
+        --900: 255, 255, 255;
+        --800: 30, 30, 30;
+    
+        --text: 0, 0, 0;
+    }
+}
+
 body, html {
     color: rgb(var(--text));
     background-color: rgb(var(--900));
@@ -32,11 +41,14 @@ header {
             place-content: center;
 
             a {
-                color: rgb(var(--text));
+                text-transform: uppercase;
+                font-weight: 900;
                 padding: 2rem;
+                color: rgb(255, 255, 255);
                 text-decoration: none;
 
                 &:hover {
+                    color: rgb(var(--text));
                     background-color: rgb(var(--900));
                 } 
             }
@@ -61,7 +73,7 @@ h3 {
 input, button, textarea {
     background-color: rgb(var(--800));
     padding: 0.5rem 1rem;
-    color: rgb(var(--text));
+    color: rgb(255, 255, 255);
     border: none;
     font-family: "Poppins", sans-serif;
 
