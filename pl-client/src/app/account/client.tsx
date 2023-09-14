@@ -15,7 +15,7 @@ const AdminConfig = (props: {
     const [libLoading, setLibLoading] = useState<boolean>(true);
 
     useEffect(() => {
-        (async() => {
+        (async () => {
             const libsFetch = await axios({
                 "url": "/api/libs/all",
                 "method": "GET"

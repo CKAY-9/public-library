@@ -1,6 +1,7 @@
 import { getInstanceInfo } from "@/data/instance";
 import { Metadata } from "next";
 import ProfileServer from "./server";
+import { getProfile, getSelfWithToken } from "@/data/user";
 
 export const generateMetadata = async ({params}: {
     params: {
@@ -8,8 +9,17 @@ export const generateMetadata = async ({params}: {
     }
 }): Promise<Metadata> => {
     const info = await getInstanceInfo();
+    const user = await getProfile(Number.parseInt(params.id.toString()));
+
+    if (user === null) {
+        return {
+            "title": info.instance_name,
+            "description": info.instance_description
+        }
+    }
+
     return {
-        "title": info.instance_name,
+        "title": `${user.username} - ${info.instance_name}`,
         "description": info.instance_description
     }
 }

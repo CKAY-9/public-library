@@ -2,6 +2,7 @@ import Header from "@/components/header/header";
 import { getInstanceInfo } from "@/data/instance";
 import { getProfile } from "@/data/user";
 import { redirect } from "next/navigation";
+import ProfileClient from "./client";
 
 const ProfileServer = async (props: {
     userID: number
@@ -19,7 +20,7 @@ const ProfileServer = async (props: {
             <main className="container">
                 <h1>{profile.username}</h1>
                 {profile.admin && <h3 style={{"color": "red"}}>Admin</h3>}
-                
+                <ProfileClient profile={profile} />
             </main>
         </>
     );

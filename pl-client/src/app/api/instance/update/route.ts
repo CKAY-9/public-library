@@ -26,21 +26,10 @@ export const PUT = async (request: Request) => {
         return NextResponse.json({"message": "User must be admin to update instance!"});
     }
 
-    const existingLibs = await prisma.library.findMany() || []; 
-    const toAppendLibs = req.libs.filter((lib, i) => {
-        if (i >= existingLibs.length) {
-            return true;
-        }
-        return lib.id === existingLibs[i].id;
+    const removeLibs = await prisma.library.deleteMany();
+    const insertLibs = await prisma.library.createMany({
+        "data": req.libs
     });
-    for (let i = 0; i < toAppendLibs.length; i++) {
-        const insert = await prisma.library.create({
-            "data": {
-                "host": toAppendLibs[i].host,
-                "key": toAppendLibs[i].key
-            }
-        })
-    }
 
     const updateInstance = await prisma.config.update({
         "data": {

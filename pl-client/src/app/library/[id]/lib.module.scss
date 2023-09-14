@@ -1,6 +1,7 @@
 .works {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 300px));
+    gap: 1rem;
 
     .work {
         display: flex;

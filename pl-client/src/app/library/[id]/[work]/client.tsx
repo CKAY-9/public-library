@@ -16,7 +16,7 @@ const Comments = (props: {
     const [newCommentContent, setNewCommentContent] = useState<string>("");
 
     useEffect(() => {
-        (async() => {
+        (async () => {
             const request = await axios({
                 "url": "/api/libs/comments/get",
                 "method": "GET",
@@ -29,7 +29,7 @@ const Comments = (props: {
             setComments(request.data);
             setLoading(false);
         })();
-    }, []);
+    }, [props.content.id, props.id]);
 
     const newComment = async (e: BaseSyntheticEvent) => {
         e.preventDefault();
@@ -95,9 +95,14 @@ const WorkClient = (props: {
 
     return (
         <>
-            <section style={{ "display": "flex", "gap": "1rem" }}>
+            <section style={{"display": "flex", "gap": "1rem"}}>
                 <span>Likes: {0}</span>
                 <span>Dislikes: {0}</span>
+            </section>
+            <section style={{ "display": "flex", "gap": "1rem" }}>
+                <button onClick={() => setView(0)}>Finished</button>
+                <button onClick={() => setView(1)}>Reading</button>
+                <button onClick={() => setView(0)}>Going to Read</button>
             </section>
             <nav style={{
                 "display": "flex",

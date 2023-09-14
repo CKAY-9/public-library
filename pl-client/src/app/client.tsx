@@ -25,7 +25,7 @@ export const LibraryPreview = (props: {
     const [libInfo, setLibInfo] = useState<LibInfo | undefined>(undefined);
 
     useEffect(() => {
-        (async() => {
+        (async () => {
             const request = await axios({
                 "url": props.lib.host + "/api/library/info",
                 "method": "GET",
@@ -34,7 +34,7 @@ export const LibraryPreview = (props: {
             setLoading(false);
             setLibInfo(request.data);
         })();
-    });
+    }, [props.lib.host]);
 
     if (loading) {
         return (<span>Loading...</span>);
