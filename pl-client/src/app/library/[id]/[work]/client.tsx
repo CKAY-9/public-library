@@ -6,10 +6,14 @@ import style from "./work.module.scss";
 import axios from "axios";
 import { getCookie } from "@/utils/cookies";
 import Link from "next/link";
+import Image from "next/image";
+import { User } from "@prisma/client";
+import { Document, Page } from "react-pdf";
 
 const Comments = (props: {
     content: LibFile,
-    id: number
+    id: number,
+    user: User | null
 }) => {
     const [comments, setComments] = useState<Comment[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
@@ -64,11 +68,13 @@ const Comments = (props: {
 
     return (
         <div className={style.comments}>
-            <div className={style.newComment}>
-                <label>New Comment</label>
-                <textarea onChange={(e: BaseSyntheticEvent) => setNewCommentContent(e.target.value)} placeholder="Your Comment" />
-                <button onClick={newComment}>Post</button>
-            </div>
+            {props.user !== null &&
+                <div className={style.newComment}>
+                    <label>New Comment</label>
+                    <textarea onChange={(e: BaseSyntheticEvent) => setNewCommentContent(e.target.value)} placeholder="Your Comment" />
+                    <button onClick={newComment}>Post</button>
+                </div>
+            }
             {comments.length <= 0 ? <span>This entry has no comments.</span> :
                 <>
                     {comments.map((comment: Comment, index: number) => {
@@ -87,9 +93,50 @@ const Comments = (props: {
     );
 } 
 
+export const DocumentView = (props: {
+    content: LibFile,
+    hostID: number
+}) => {
+    const [loading, setLoading] = useState<boolean>(true);
+    const [data, setData] = useState<string>("");
+
+    useEffect(() => {
+        (async () => {
+            const request = await axios({
+                "url": "/api/libs/file/data",
+                "method": "GET",
+                "params": {
+                    "host": props.hostID,
+                    "workID": props.content.id
+                }
+            });
+
+            setData(request.data.raw);
+            setLoading(false);
+        })();
+    }, [props.hostID, props.content]);
+
+    if (loading) {
+        return (<span>Loading...</span>);
+    }
+
+    return (
+        <>
+            {props.content.dest.endsWith(".pdf") &&
+                <Document file={{
+                    "data": data
+                }}>
+                    <Page></Page>
+                </Document>
+            }
+        </>
+    );
+}
+
 const WorkClient = (props: {
     content: LibFile,
-    id: number
+    id: number,
+    user: User | null
 }) => {
     const [view, setView] = useState<number>(0);
 
@@ -141,14 +188,32 @@ const WorkClient = (props: {
     return (
         <>
             <section style={{"display": "flex", "gap": "1rem"}}>
-                <span>Likes: {props.content.likes.length}</span>
-                <span>Dislikes: {props.content.dislikes.length}</span>
+                <div style={{"display": "flex", "gap": "0.5rem", "alignItems": "center"}}>
+                    <span>{props.content.likes.length}</span>    
+                    <Image src="/thumbs_up.svg" alt="Thumbs Up" sizes="100%" width={0} height={0} style={{
+                        "width": "1rem",
+                        "height": "1rem",
+                        "filter": "invert(1)",
+                        "opacity": "0.5"
+                    }} />
+                </div>
+                <div style={{"display": "flex", "gap": "0.5rem", "alignItems": "center"}}>
+                    <span>{props.content.dislikes.length}</span>    
+                    <Image src="/thumbs_down.svg" alt="Thumbs Down" sizes="100%" width={0} height={0} style={{
+                        "width": "1rem",
+                        "height": "1rem",
+                        "filter": "invert(1)",
+                        "opacity": "0.5"
+                    }} />
+                </div>
             </section>
-            <section style={{ "display": "flex", "gap": "1rem" }}>
-                <button onClick={setFinished}>Finished</button>
-                <button onClick={setReading}>Reading</button>
-                <button onClick={setGoingToRead}>Going to Read</button>
-            </section>
+            {props.user !== null &&
+                <section style={{ "display": "flex", "gap": "1rem" }}>
+                    <button onClick={setFinished}>Finished</button>
+                    <button onClick={setReading}>Reading</button>
+                    <button onClick={setGoingToRead}>Going to Read</button>
+                </section>
+            }
             <nav style={{
                 "display": "flex",
                 "gap": "1rem"
@@ -160,7 +225,7 @@ const WorkClient = (props: {
                 <p>{props.content.description}</p>
             </section>
             <section style={{"display": view === 1 ? "flex" : "none"}}>
-                <Comments id={props.id} content={props.content}></Comments>
+                <Comments user={props.user} id={props.id} content={props.content}></Comments>
             </section>
         </>
     );

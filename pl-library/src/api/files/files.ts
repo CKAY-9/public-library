@@ -3,7 +3,7 @@ import { NewFileDTO } from "./files.dto";
 import multer from "multer";
 import { prismaClient } from "../../db/prisma";
 import { isUserAdmin } from "../users/users";
-import { existsSync, mkdirSync } from "fs";
+import { existsSync, mkdirSync, promises } from "fs";
 import { verifyIncomingHost } from "../api";
 
 export const filesRouter = Router();
@@ -110,4 +110,20 @@ filesRouter.get("/get", async (req, res) => {
         }
     });
     return res.status(200).json(file);
+});
+
+filesRouter.get("/raw", async (req, res) => {
+    const id: number = Number.parseInt(req.query.workID as string || "0");
+    const file = await prismaClient.file.findUnique({
+        "where": {
+            "id": id
+        }
+    });
+
+    if (file === null) {
+        return res.status(400).json({"message": "Failed to get file"});
+    }
+
+    const openFile = await promises.readFile(`.\\${file.dest}`, "ascii");
+    return res.status(200).json({"raw": openFile});
 });

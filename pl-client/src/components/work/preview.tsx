@@ -17,9 +17,25 @@ const WorkPreview = (props: {
             {props.file.cover !== "" &&
                 <Image src={`${props.host.host}/${props.file.cover}`} alt={"Cover"} sizes="100%" width={0} height={0} />
             }
-            <section style={{"display": "flex", "justifyContent": "space-between"}}>
-                <span>Likes: {0}</span>
-                <span>Dislikes: {0}</span>
+            <section style={{"display": "flex", "gap": "1rem"}}>
+                <div style={{"display": "flex", "gap": "0.5rem", "alignItems": "center"}}>
+                    <span>{props.file.likes.length}</span>    
+                    <Image src="/thumbs_up.svg" alt="Thumbs Up" sizes="100%" width={0} height={0} style={{
+                        "width": "1rem",
+                        "height": "1rem",
+                        "filter": "invert(1)",
+                        "opacity": "0.5"
+                    }} />
+                </div>
+                <div style={{"display": "flex", "gap": "0.5rem", "alignItems": "center"}}>
+                    <span>{props.file.dislikes.length}</span>    
+                    <Image src="/thumbs_down.svg" alt="Thumbs Down" sizes="100%" width={0} height={0} style={{
+                        "width": "1rem",
+                        "height": "1rem",
+                        "filter": "invert(1)",
+                        "opacity": "0.5"
+                    }} />
+                </div>
             </section>
             <h3>{props.file.title}</h3>
             <span>Author: {props.file.author}</span>

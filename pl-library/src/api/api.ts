@@ -15,7 +15,7 @@ apiRouter.use("/keys", keysRouter);
 apiRouter.use("/library", libraryRouter);
 
 export const verifyIncomingHost = async (req: Request) => {
-    const key = req.headers.authorization; 
+    const key = req.headers.authorization || req.query.key; 
     const host = req.headers.host;
     const keys = await prismaClient.key.findMany();
     for (let i = 0; i < keys.length; i++) {

@@ -31,7 +31,12 @@ const LibraryServer = async (props: {
                     <p>{libInfo.description}</p>
                 </div>
                 {(contents === null || contents?.length <= 0) && <span>This library has no content!</span>}
-                {(contents !== null && contents.length >= 1) && <LibraryContents id={props.id} host={hostInfo} contents={contents}></LibraryContents>}
+                {(contents !== null && contents.length >= 1) && 
+                    <>
+                        <h3>Contents</h3>
+                        <LibraryContents id={props.id} host={hostInfo} contents={contents}></LibraryContents>
+                    </>
+                }
             </main>
         </>
     );

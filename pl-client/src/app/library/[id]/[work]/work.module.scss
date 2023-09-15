@@ -12,6 +12,13 @@
     }
 }
 
+.container {
+    margin: 5rem;
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
 .comments {
     display: flex;
     flex-direction: column;

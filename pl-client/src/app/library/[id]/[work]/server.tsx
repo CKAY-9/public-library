@@ -5,7 +5,7 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 import style from "./work.module.scss";
 import Link from "next/link";
-import WorkClient from "./client";
+import WorkClient, { DocumentView } from "./client";
 import { getSelfWithToken, getToken } from "@/data/user";
 
 const WorkServer = async (props: {
@@ -31,7 +31,7 @@ const WorkServer = async (props: {
     return (
         <>
             <Header user={user} instanceInfo={info}></Header>
-            <main className="container">
+            <main className={style.container}>
                 <div className={style.work}>
                     {content.cover !== "" && 
                         <Image className={style.cover} src={`${hostInfo.host}/${content.cover}`} alt="Cover" sizes="100%" width={0} height={0} />
@@ -40,7 +40,10 @@ const WorkServer = async (props: {
                     <span>Author: {content.author}</span>
                     <span>Published: {new Date(content.published).toLocaleDateString()} <span style={{"opacity": "0.5"}}>(mm/dd/yyyy)</span></span>
                     <span>From: <Link href={hostInfo.host}>{libInfo.name}</Link> (<Link href={`/library/${props.id}`}>View more on {info.instance_name}</Link>)</span>
-                    <WorkClient id={props.id} content={content}></WorkClient>
+                    <WorkClient user={user} id={props.id} content={content}></WorkClient>
+                </div>
+                <div className={style.file}>
+                    <DocumentView content={content} hostID={hostInfo.id}></DocumentView>
                 </div>
             </main>
         </>
