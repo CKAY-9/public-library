@@ -3,6 +3,7 @@ import { prismaClient } from "../../db/prisma";
 import { LibInfo } from "@prisma/client";
 import { isUserAdmin } from "../users/users";
 import { UpdateLibDTO } from "./library.dto";
+import { verifyIncomingHost } from "../api";
 
 export const libraryRouter = Router();
 
@@ -24,6 +25,16 @@ export const getLibraryInfo = async (): Promise<LibInfo> => {
     return info;
 }
 
+// Middleware
+libraryRouter.use(async (req, res, next) => {
+    const verify = await verifyIncomingHost(req);
+    if (!verify) {
+        return res.status(401).json({"message": "Invalid key"});
+    }
+    next();
+});
+
+// Routes
 libraryRouter.get("/info", async (req, res) => {
     const info = await getLibraryInfo();
     return res.status(200).json(info);

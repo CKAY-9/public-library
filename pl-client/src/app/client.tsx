@@ -45,10 +45,9 @@ export const LibraryPreview = (props: {
     }
 
     return (
-        <Link href={`/library/${libInfo.id}`} className={style.library}>
+        <Link href={`/library/${props.lib.id}`} className={style.library}>
             <h3>{libInfo.name}</h3>
             <p>{libInfo.description}</p>
-            <Link href={props.lib.host}>Visit Host Site</Link>
         </Link>     
     );
 }
