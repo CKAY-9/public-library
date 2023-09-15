@@ -1,6 +1,5 @@
 "use client";
 
-import {Library} from "@prisma/client";
 import axios from "axios";
 import {useEffect, useState} from "react";
 import { LibInfo, Profile } from "./api/dto";
@@ -19,38 +18,41 @@ export const UserPreview = (props: {
 }
 
 export const LibraryPreview = (props: {
-    lib: Library
+    id: number
 }) => {
     const [loading, setLoading] = useState<boolean>(true);
-    const [libInfo, setLibInfo] = useState<LibInfo | undefined>(undefined);
+    const [libInfo, setLibInfo] = useState<LibInfo | null>(null);
 
     useEffect(() => {
         (async () => {
             try {
                 const request = await axios({
-                    "url": props.lib.host + "/api/library/info",
+                    "url": "/api/libs/info",
                     "method": "GET",
+                    "params": {
+                        "id": props.id,
+                    }
                 });
     
-                setLibInfo(request.data);
+                setLibInfo(request.data.lib);
             } catch (ex) {
-                setLibInfo(undefined);
+                setLibInfo(null);
             }
 
             setLoading(false);
         })();
-    }, [props.lib.host]);
+    }, [props.id]);
 
     if (loading) {
         return (<span>Loading...</span>);
     }
 
-    if (libInfo === undefined) {
+    if (libInfo === null) {
         return (<></>)
     }
 
     return (
-        <Link href={`/library/${props.lib.id}`} className={style.library}>
+        <Link href={`/library/${props.id}`} className={style.library}>
             <h3>{libInfo.name}</h3>
             <p>{libInfo.description}</p>
         </Link>     

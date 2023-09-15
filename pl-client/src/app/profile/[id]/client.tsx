@@ -10,19 +10,24 @@ const WorkPreviewProf = (props: {
     work: string
 }) => {
     const [loading, setLoading] = useState<boolean>(false);
-    const [work, setWork] = useState<LibFileFetch>();
+    const [work, setWork] = useState<LibFileFetch | null>(null);
 
     useEffect(() => {
         (async () => {
-            const request = await axios({
-                "url": "/api/libs/file",
-                "method": "GET",
-                "params": {
-                    "work": props.work
-                }
-            });
+            try {
+                const request = await axios({
+                    "url": "/api/libs/file",
+                    "method": "GET",
+                    "params": {
+                        "work": props.work
+                    }
+                });
+    
+                setWork(request.data);
+            } catch (ex) {
+                setWork(null);
+            }
 
-            setWork(request.data);
             setLoading(false);
         })();
     }, [props.work]);
@@ -33,7 +38,7 @@ const WorkPreviewProf = (props: {
         );
     }
 
-    if (work === undefined) {
+    if (work === null) {
         return (
             <></>
         );
