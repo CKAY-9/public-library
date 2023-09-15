@@ -141,8 +141,8 @@ const WorkClient = (props: {
     return (
         <>
             <section style={{"display": "flex", "gap": "1rem"}}>
-                <span>Likes: {0}</span>
-                <span>Dislikes: {0}</span>
+                <span>Likes: {props.content.likes.length}</span>
+                <span>Dislikes: {props.content.dislikes.length}</span>
             </section>
             <section style={{ "display": "flex", "gap": "1rem" }}>
                 <button onClick={setFinished}>Finished</button>

@@ -23,7 +23,7 @@ const WorkPreview = (props: {
             </section>
             <h3>{props.file.title}</h3>
             <span>Author: {props.file.author}</span>
-            <p>{props.file.description.slice(0, 75 > props.file.description.length ? props.file.description.length : 75)}...</p>
+            <span>Description: {props.file.description.slice(0, 75 > props.file.description.length ? props.file.description.length : 75)}...</span>
         </Link>
     );
 }

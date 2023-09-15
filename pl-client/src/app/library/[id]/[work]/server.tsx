@@ -37,8 +37,8 @@ const WorkServer = async (props: {
                         <Image className={style.cover} src={`${hostInfo.host}/${content.cover}`} alt="Cover" sizes="100%" width={0} height={0} />
                     }
                     <h1>{content.title}</h1>
-                    <span>Author: ...</span>
-                    <span>Published: ...</span>
+                    <span>Author: {content.author}</span>
+                    <span>Published: {new Date(content.published).toLocaleDateString()} <span style={{"opacity": "0.5"}}>(mm/dd/yyyy)</span></span>
                     <span>From: <Link href={hostInfo.host}>{libInfo.name}</Link> (<Link href={`/library/${props.id}`}>View more on {info.instance_name}</Link>)</span>
                     <WorkClient id={props.id} content={content}></WorkClient>
                 </div>

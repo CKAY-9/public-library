@@ -13,7 +13,7 @@ const Header = (props: {
             </ul>
             {props.user !== null ?
                 <ul>
-                    <li><Link href="/account">Account</Link></li>
+                    <li><Link href="/account">Settings</Link></li>
                     <li><Link href={`/profile/${props.user.id}`}>Profile</Link></li>
                 </ul> :
                 <ul>
