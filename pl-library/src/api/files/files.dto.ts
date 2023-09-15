@@ -4,3 +4,8 @@ export interface NewFileDTO {
     author: string,
     published: number
 }
+
+export interface DisLikeDTO {
+    work: number,
+    user: number
+}

@@ -5,7 +5,7 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 import style from "./work.module.scss";
 import Link from "next/link";
-import WorkClient, { DocumentView } from "./client";
+import WorkClient from "./client";
 import { getSelfWithToken, getToken } from "@/data/user";
 import { PdfReader } from "pdfreader";
 

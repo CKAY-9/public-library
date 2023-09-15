@@ -145,26 +145,65 @@ const WorkClient = (props: {
         });
     }
 
+    const like = async (e: BaseSyntheticEvent) => {
+        e.preventDefault();
+
+        if (props.user === null) return;
+
+        const request = await axios({
+            "url": "/api/libs/file/like",
+            "method": "POST",
+            "data": {
+                "workID": props.id
+            },
+            "headers": {
+                "Authorization": getCookie("user_token")
+            }
+        });
+    }
+
+    const dislike = async (e: BaseSyntheticEvent) => {
+        e.preventDefault();
+
+        if (props.user === null) return;
+
+        const request = await axios({
+            "url": "/api/libs/file/dislike",
+            "method": "POST",
+            "data": {
+                "lib": props.id,
+                "work": props.content.id
+            },
+            "headers": {
+                "Authorization": getCookie("user_token")
+            }
+        });
+    }
+
     return (
         <>
             <section style={{"display": "flex", "gap": "1rem"}}>
                 <div style={{"display": "flex", "gap": "0.5rem", "alignItems": "center"}}>
                     <span>{props.content.likes.length}</span>    
-                    <Image src="/thumbs_up.svg" alt="Thumbs Up" sizes="100%" width={0} height={0} style={{
-                        "width": "1rem",
-                        "height": "1rem",
-                        "filter": "invert(1)",
-                        "opacity": "0.5"
-                    }} />
+                    <button onClick={like} style={{"backgroundColor": "transparent", "padding": "0.5rem", "display": "grid", "placeContent": "center"}}>
+                        <Image src="/thumbs_up.svg" alt="Thumbs Up" sizes="100%" width={0} height={0} style={{
+                            "width": "1rem",
+                            "height": "1rem",
+                            "filter": "invert(1)",
+                            "opacity": "0.5"
+                        }} />
+                    </button>
                 </div>
                 <div style={{"display": "flex", "gap": "0.5rem", "alignItems": "center"}}>
                     <span>{props.content.dislikes.length}</span>    
-                    <Image src="/thumbs_down.svg" alt="Thumbs Down" sizes="100%" width={0} height={0} style={{
-                        "width": "1rem",
-                        "height": "1rem",
-                        "filter": "invert(1)",
-                        "opacity": "0.5"
-                    }} />
+                    <button onClick={dislike} style={{"backgroundColor": "transparent", "padding": "0.5rem", "display": "grid", "placeContent": "center"}}>
+                        <Image src="/thumbs_down.svg" alt="Thumbs Down" sizes="100%" width={0} height={0} style={{
+                            "width": "1rem",
+                            "height": "1rem",
+                            "filter": "invert(1)",
+                            "opacity": "0.5"
+                        }} />
+                    </button>
                 </div>
             </section>
             {props.user !== null &&

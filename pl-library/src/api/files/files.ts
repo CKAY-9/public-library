@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { NewFileDTO } from "./files.dto";
+import { DisLikeDTO, NewFileDTO } from "./files.dto";
 import multer from "multer";
 import { prismaClient } from "../../db/prisma";
 import { isUserAdmin } from "../users/users";
@@ -126,4 +126,98 @@ filesRouter.get("/raw", async (req, res) => {
 
     const openFile = await promises.readFile(`./${file.dest}`, "ascii");
     return res.status(200).json({"raw": openFile});
+});
+
+filesRouter.post("/like", async (req, res) => {
+    const data: DisLikeDTO = req.body;
+    const entry = `${data.user}@${req.headers.host}`;
+
+    const file = await prismaClient.file.findUnique({
+        "where": {
+            "id": data.work || 0
+        }
+    });
+
+    if (file === null) {
+        return res.status(404).json({"message": "Failed to find file with specified ID"});
+    }
+
+    let flag = true;
+    for (let i = 0; i < file.likes.length; i++) {
+        // This will remove the like if they already did like it
+        if (file.likes[i].toLowerCase().includes(entry)) {
+            file.likes.splice(i);
+            flag = false;
+            break;
+        }
+    }
+    
+    if (flag) {
+        file.likes.push(entry);
+    }
+
+    for (let i = 0; i < file.dislikes.length; i++) {
+        if (file.dislikes[i].toLowerCase().includes(entry)) {
+            file.dislikes.splice(i);
+        }
+    }
+
+    const updateFile = await prismaClient.file.update({
+        "where": {
+            "id": file.id
+        },
+        "data": {
+            "likes": file.likes,
+            "dislikes": file.dislikes
+        }
+    });
+
+    return res.status(200).json({"message": "Updated likes"});
+});
+
+filesRouter.post("/dislike", async (req, res) => {
+    const data: DisLikeDTO = req.body;
+    const entry = `${data.user}@${req.headers.host}`;
+
+    const file = await prismaClient.file.findUnique({
+        "where": {
+            "id": data.work || 0
+        }
+    });
+
+    if (file === null) {
+        return res.status(404).json({"message": "Failed to find file with specified ID"});
+    }
+
+    let flag = true;
+    for (let i = 0; i < file.dislikes.length; i++) {
+        // This will remove the like if they already did dislike it
+        if (file.dislikes[i].toLowerCase().includes(entry)) {
+            file.dislikes.splice(i);
+            flag = false;
+            break;
+        }
+    }
+    
+    if (flag) {
+        file.dislikes.push(entry);
+    }
+
+    for (let i = 0; i < file.likes.length; i++) {
+        if (file.likes[i].toLowerCase().includes(entry)) {
+            file.likes.splice(i);
+        }
+    }
+
+    const updateFile = await prismaClient.file.update({
+        "where": {
+            "id": file.id
+        },
+        "data": {
+            "likes": file.likes,
+            "dislikes": file.dislikes
+        }
+    });
+
+    return res.status(200).json({"message": "Updated dislikes"});
 });
