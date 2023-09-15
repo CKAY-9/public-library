@@ -3,10 +3,11 @@ import {getInstanceInfo} from "@/data/instance";
 import {getLibraries} from "@/data/libraries";
 import {Library} from "@prisma/client";
 import {Metadata} from "next";
-import {LibraryPreview, UserPreview} from "./client";
+import {LibrariesClient, LibraryPreview, UserPreview, UsersClient} from "./client";
 import style from "./index.module.scss";
 import { getProfiles, getSelfWithToken, getToken } from "@/data/user";
 import { Profile } from "./api/dto";
+import axios from "axios";
 
 export const generateMetadata = async (): Promise<Metadata> => {
     const info = await getInstanceInfo();
@@ -21,28 +22,31 @@ const Home = async () => {
     const libraries = await getLibraries();
     const users = await getProfiles();
     const user = await getSelfWithToken(getToken() || "");
+    const libInfoArr = [];
+
+    for (let i = 0; i < libraries.length; i++) {
+        try {
+            const req = await axios({
+                "url": "/api/libs/info",
+                "method": "GET",
+                "params": {
+                    "id": libraries[i].id,
+                }
+            });
+    
+            libInfoArr.push(req.data.lib);
+        } catch (ex: any) {
+            console.error(ex.toString());
+        }
+    }
 
     return (
         <>
             <Header user={user} instanceInfo={info}></Header>
             <main className="container">
                 <h1>Browse</h1>
-                {libraries.length <= 0 ? <h2>No libraries found</h2> : <h2>Libraries</h2>}
-                <div className={style.libraries}>
-                    {libraries.map((lib: Library, index: number) => {
-                        return (
-                            <LibraryPreview id={lib.id} key={index} />
-                        );
-                    })}
-                </div>
-                {users.length <= 0 ? <h2>No users found</h2> : <h2>Users</h2>}
-                <div className={style.users}>
-                    {users.map((user: Profile, index: number) => {
-                        return (
-                            <UserPreview key={index} user={user} />
-                        )
-                    })}
-                </div>
+                <LibrariesClient libraries={libInfoArr}></LibrariesClient>
+                <UsersClient users={users}></UsersClient>
             </main>
         </>
     );

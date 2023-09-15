@@ -30,6 +30,10 @@ export interface LibFile {
     dislikes: string[]
 }
 
+export interface DeleteLibrary {
+    libraryID: string
+}
+
 export interface LibFileFetch {
     entry: LibFile,
     hostData: {

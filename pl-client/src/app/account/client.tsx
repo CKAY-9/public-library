@@ -3,6 +3,7 @@
 import {getCookie} from "@/utils/cookies";
 import {Config, Library, User} from "@prisma/client";
 import axios from "axios";
+import Image from "next/image";
 import {BaseSyntheticEvent, useEffect, useState} from "react";
 
 const AdminConfig = (props: {
@@ -43,6 +44,24 @@ const AdminConfig = (props: {
         });
     }
 
+    const deleteLibrary = async (e: BaseSyntheticEvent, libraryID: number) => {
+        e.preventDefault();
+        const request = await axios({
+            "url": "/api/libs/delete",
+            "method": "DELETE",
+            "data": {
+                "libraryID": libraryID
+            },
+            "headers": {
+                "Authorization": getCookie("user_token")
+            }
+        });
+        
+        if (request.status === 200) {
+            setLibs(libs.filter((l) => l.id !== libraryID));
+        }
+    }
+
     return (
         <>
             <h2>Admin Settings</h2>
@@ -65,6 +84,13 @@ const AdminConfig = (props: {
                                 <label>Library #{index + 1}</label>
                                 <input type="text" onChange={(e: BaseSyntheticEvent) => libs[index].key = e.target.value} placeholder="Instance Key" defaultValue={lib.key} />
                                 <input type="text" onChange={(e: BaseSyntheticEvent) => libs[index].host = e.target.value} placeholder="Library URL" defaultValue={lib.host} />
+                                <button onClick={async (e) => await deleteLibrary(e, lib.id)} style={{"backgroundColor": "transparent"}}>
+                                    <Image src="/delete.svg" alt="Delete" sizes="100%" width={0} height={0} style={{
+                                        "width": "1rem",
+                                        "height": "1rem",
+                                        "filter": "invert(1)"
+                                    }} />
+                                </button>
                             </div>
                         );
                     })}

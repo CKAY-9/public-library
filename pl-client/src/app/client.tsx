@@ -1,10 +1,11 @@
 "use client";
 
 import axios from "axios";
-import {useEffect, useState} from "react";
+import {BaseSyntheticEvent, useEffect, useState} from "react";
 import { LibInfo, Profile } from "./api/dto";
 import style from "./index.module.scss";
 import Link from "next/link";
+import { Library, User } from "@prisma/client";
 
 export const UserPreview = (props: {
     user: Profile
@@ -18,43 +19,60 @@ export const UserPreview = (props: {
 }
 
 export const LibraryPreview = (props: {
-    id: number
+    info: LibInfo | null
 }) => {
-    const [loading, setLoading] = useState<boolean>(true);
-    const [libInfo, setLibInfo] = useState<LibInfo | null>(null);
-
-    useEffect(() => {
-        (async () => {
-            try {
-                const request = await axios({
-                    "url": "/api/libs/info",
-                    "method": "GET",
-                    "params": {
-                        "id": props.id,
-                    }
-                });
-    
-                setLibInfo(request.data.lib);
-            } catch (ex) {
-                setLibInfo(null);
-            }
-
-            setLoading(false);
-        })();
-    }, [props.id]);
-
-    if (loading) {
-        return (<span>Loading...</span>);
-    }
-
-    if (libInfo === null) {
+    if (props.info === null) {
         return (<></>)
     }
 
     return (
-        <Link href={`/library/${props.id}`} className={style.library}>
-            <h3>{libInfo.name}</h3>
-            <p>{libInfo.description}</p>
+        <Link href={`/library/${props.info.id}`} className={style.library}>
+            <h3>{props.info.name}</h3>
+            <p>{props.info.description}</p>
         </Link>     
+    );
+}
+
+export const LibrariesClient = (props: {
+    libraries: LibInfo[]
+}) => {
+    const [search, setSearch] = useState<string>("");
+
+    return (
+        <>
+            {props.libraries.length <= 0 ? <h2>No libraries found</h2> : <>
+                <h2>Libraries</h2>
+                <input type="text" placeholder="Search library by name" onChange={(e: BaseSyntheticEvent) => setSearch(e.target.value.toLowerCase())} />
+            </>}    
+                <div className={style.libraries}>
+                    {props.libraries.filter((l) => l.name.toLowerCase().includes(search)).map((lib: LibInfo, index: number) => {
+                        return (
+                            <LibraryPreview info={lib}  key={index} />
+                        );
+                    })}
+            </div>
+        </>
+    );
+}
+
+export const UsersClient = (props: {
+    users: Profile[]
+}) => {
+    const [search, setSearch] = useState<string>("");
+
+    return (
+        <>
+            {props.users.length <= 0 ? <h2>No users found</h2> : <>
+                <h2>Users</h2>
+                <input type="text" placeholder="Search user by name" onChange={(e: BaseSyntheticEvent) => setSearch(e.target.value.toLowerCase())} />
+            </>}
+            <div className={style.users}>
+                {props.users.filter((u) => u.username.toLowerCase().includes(search)).map((user: Profile, index: number) => {
+                    return (
+                        <UserPreview key={index} user={user} />
+                    );
+            })}
+            </div>
+        </>
     );
 }

@@ -8,7 +8,7 @@ import { getCookie } from "@/utils/cookies";
 import Link from "next/link";
 import Image from "next/image";
 import { User } from "@prisma/client";
-import { Document, Page } from "react-pdf";
+import { PdfReader } from "pdfreader";
 
 const Comments = (props: {
     content: LibFile,
@@ -92,46 +92,6 @@ const Comments = (props: {
         </div>
     );
 } 
-
-export const DocumentView = (props: {
-    content: LibFile,
-    hostID: number
-}) => {
-    const [loading, setLoading] = useState<boolean>(true);
-    const [data, setData] = useState<string>("");
-
-    useEffect(() => {
-        (async () => {
-            const request = await axios({
-                "url": "/api/libs/file/data",
-                "method": "GET",
-                "params": {
-                    "host": props.hostID,
-                    "workID": props.content.id
-                }
-            });
-
-            setData(request.data.raw);
-            setLoading(false);
-        })();
-    }, [props.hostID, props.content]);
-
-    if (loading) {
-        return (<span>Loading...</span>);
-    }
-
-    return (
-        <>
-            {props.content.dest.endsWith(".pdf") &&
-                <Document file={{
-                    "data": data
-                }}>
-                    <Page></Page>
-                </Document>
-            }
-        </>
-    );
-}
 
 const WorkClient = (props: {
     content: LibFile,

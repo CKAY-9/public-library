@@ -124,6 +124,6 @@ filesRouter.get("/raw", async (req, res) => {
         return res.status(400).json({"message": "Failed to get file"});
     }
 
-    const openFile = await promises.readFile(`.\\${file.dest}`, "ascii");
+    const openFile = await promises.readFile(`./${file.dest}`, "ascii");
     return res.status(200).json({"raw": openFile});
 });

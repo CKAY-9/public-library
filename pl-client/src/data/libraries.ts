@@ -79,7 +79,8 @@ export const getLibraryInfo = async (id: number, slug: boolean = true) => {
             "method": "GET",
             "headers": {
                 "Authorization": lib.key
-            }
+            },
+            "timeout": 1000 * 10 // 10 seconds
         });
     
         return libRequest.data;

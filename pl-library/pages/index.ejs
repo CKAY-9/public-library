@@ -37,6 +37,7 @@
                             <span>Key #<%= index + 1 %></span>
                             <span>Host: <%= keys[index].host %></span>
                             <span>Key: <%= keys[index].key %></span>
+                            <span>Status: <%= keys[index].approved ? "Approved" : "Awaiting Approval" %></span>
                         </div>
                     <% } %>
                 </div>

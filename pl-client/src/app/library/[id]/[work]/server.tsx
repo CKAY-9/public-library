@@ -7,6 +7,7 @@ import style from "./work.module.scss";
 import Link from "next/link";
 import WorkClient, { DocumentView } from "./client";
 import { getSelfWithToken, getToken } from "@/data/user";
+import { PdfReader } from "pdfreader";
 
 const WorkServer = async (props: {
     id: number,
@@ -43,7 +44,7 @@ const WorkServer = async (props: {
                     <WorkClient user={user} id={props.id} content={content}></WorkClient>
                 </div>
                 <div className={style.file}>
-                    <DocumentView content={content} hostID={hostInfo.id}></DocumentView>
+                    
                 </div>
             </main>
         </>
