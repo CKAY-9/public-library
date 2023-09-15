@@ -26,13 +26,18 @@ export const LibraryPreview = (props: {
 
     useEffect(() => {
         (async () => {
-            const request = await axios({
-                "url": props.lib.host + "/api/library/info",
-                "method": "GET",
-            });
+            try {
+                const request = await axios({
+                    "url": props.lib.host + "/api/library/info",
+                    "method": "GET",
+                });
+    
+                setLibInfo(request.data);
+            } catch (ex) {
+                setLibInfo(undefined);
+            }
 
             setLoading(false);
-            setLibInfo(request.data);
         })();
     }, [props.lib.host]);
 
