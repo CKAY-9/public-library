@@ -5,14 +5,16 @@ import { NewCommentDTO } from "./comments.dto";
 
 export const commentsRouter = Router();
 
+// Middleware
 commentsRouter.use(async (req, res, next) => {
     const hostCheck = await verifyIncomingHost(req);
     if (!hostCheck) {
-        return res.status(401).json({"message": "Invalid instance key"});
+        return res.status(401).json({"message": "Invalid key"});
     }
     next();
 });
 
+// Routes
 commentsRouter.get("/get", async (req, res) => {
     const comments = await prismaClient.comment.findMany();
     return res.status(200).json(comments);

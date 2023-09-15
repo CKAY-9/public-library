@@ -4,6 +4,7 @@ import multer from "multer";
 import { prismaClient } from "../../db/prisma";
 import { isUserAdmin } from "../users/users";
 import { existsSync, mkdirSync } from "fs";
+import { verifyIncomingHost } from "../api";
 
 export const filesRouter = Router();
 
@@ -24,12 +25,21 @@ const storage = multer.diskStorage({
 const upload = multer({storage});
 
 // Middleware
+filesRouter.use(async (req, res, next) => {
+    const verify = await verifyIncomingHost(req);
+    if (!verify) {
+        return res.status(401).json({"message": "Invalid key"});
+    }
+    next();
+});
+
 filesRouter.use("/upload", async (req, res, next) => {
     if (!(await isUserAdmin(req))) {
         return res.status(401).json({"message": "Insufficient permissions"});
     }
     next();
 })
+
 filesRouter.use("/remove", async (req, res, next) => {
     if (!(await isUserAdmin(req))) {
         return res.status(401).json({"message": "Insufficient permissions"});
