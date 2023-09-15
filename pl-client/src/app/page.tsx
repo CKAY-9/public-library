@@ -31,7 +31,7 @@ const Home = async () => {
                 <div className={style.libraries}>
                     {libraries.map((lib: Library, index: number) => {
                         return (
-                            <LibraryPreview lib={lib} key={index} />
+                            <LibraryPreview id={lib.id} key={index} />
                         );
                     })}
                 </div>

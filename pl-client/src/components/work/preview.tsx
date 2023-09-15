@@ -8,6 +8,10 @@ const WorkPreview = (props: {
     file: LibFile,
     host: Library
 }) => {
+    if (props.host === null || props.file === null) {
+        return (<></>);
+    }
+
     return (
         <Link href={`/library/${props.host.id}/${props.file.id}`} className={style.work}>
             {props.file.cover !== "" &&
@@ -21,7 +25,7 @@ const WorkPreview = (props: {
             <span>Author: {props.file.author}</span>
             <p>{props.file.description.slice(0, 75 > props.file.description.length ? props.file.description.length : 75)}...</p>
         </Link>
-    )
+    );
 }
 
 export default WorkPreview;
