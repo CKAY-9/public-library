@@ -1,13 +1,12 @@
 import Header from "@/components/header/header";
 import { getInstanceInfo } from "@/data/instance";
-import { getLibraryEntry, getLibraryInfo, libraryFromSlug } from "@/data/libraries";
+import { getLibraryEntry, getLibraryInfo, getRawFile, libraryFromSlug } from "@/data/libraries";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import style from "./work.module.scss";
 import Link from "next/link";
-import WorkClient from "./client";
+import WorkClient, { DocView } from "./client";
 import { getSelfWithToken, getToken } from "@/data/user";
-import { PdfReader } from "pdfreader";
 
 const WorkServer = async (props: {
     id: number,
@@ -28,6 +27,7 @@ const WorkServer = async (props: {
 
     const user = await getSelfWithToken(getToken() || "");
     const info = await getInstanceInfo();
+    const fileURL = hostInfo.host + "/" + content.dest.split("\\").join("/");
 
     return (
         <>
@@ -44,7 +44,7 @@ const WorkServer = async (props: {
                     <WorkClient user={user} id={props.id} content={content}></WorkClient>
                 </div>
                 <div className={style.file}>
-                    
+                    <DocView url={fileURL}></DocView>
                 </div>
             </main>
         </>

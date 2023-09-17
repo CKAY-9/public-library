@@ -1,6 +1,6 @@
 import {prisma} from "./prisma"
 import axios, { AxiosResponse } from "axios";
-import { LibFile } from "@/app/api/dto";
+import { LibFile, LibInfo } from "@/app/api/dto";
 import { Library } from "@prisma/client";
 
 export const getLibraries = async () => {
@@ -53,6 +53,26 @@ export const getLibraryContents = async (lib: Library) => {
     } catch (ex) {
         console.error(ex);
         return null;
+    }
+}
+
+export const getRawFile = async (workID: number, host: Library): Promise<string> => {
+    try {
+        const request = await axios({
+            "url": host.host + "/api/files/raw",
+            "method": "GET",
+            "params": {
+                "workID": workID
+            },
+            "headers": {
+                "Authorization": host.key
+            }
+        });
+
+        return request.data.raw;
+    } catch (ex: any) {
+        console.error(ex.toString());
+        return "";
     }
 }
 

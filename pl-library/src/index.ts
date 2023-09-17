@@ -17,14 +17,18 @@ app.use("/api", apiRouter);
 // Dashboard
 app.set("view engine", "ejs");
 app.use("/static", express.static(path.join(__dirname, "../public")))
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
+/*
 app.use("/uploads", async (req, res) => {
+    
     const check = await verifyIncomingHost(req);
     if (check) {
         return express.static(path.join(__dirname, "../uploads"));
     }
     res.send("<h1>Insufficient permissions</h1>")
 });
+*/
 
 app.get("/", async (req, res) => {
     const libInfo = await getLibraryInfo();

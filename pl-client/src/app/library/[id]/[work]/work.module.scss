@@ -14,9 +14,8 @@
 
 .container {
     margin: 5rem;
-    display: flex;
-    flex-direction: row;
-    gap: 1rem;
+    display: grid;
+    grid-template-columns: 20% 80%;
 }
 
 .comments {
@@ -29,4 +28,13 @@
         flex-direction: column;
         gap: 0.5rem;
     }
+}
+
+.file {
+    display: grid;
+    place-content: center;
+}
+
+.page {
+    height: 100%;
 }

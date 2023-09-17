@@ -8,6 +8,7 @@ import style from "./index.module.scss";
 import { getProfiles, getSelfWithToken, getToken } from "@/data/user";
 import { Profile } from "./api/dto";
 import axios from "axios";
+import { BASE_URL } from "./api/resources";
 
 export const generateMetadata = async (): Promise<Metadata> => {
     const info = await getInstanceInfo();
@@ -27,10 +28,13 @@ const Home = async () => {
     for (let i = 0; i < libraries.length; i++) {
         try {
             const req = await axios({
-                "url": "/api/libs/info",
+                "url": BASE_URL + "/api/libs/info",
                 "method": "GET",
                 "params": {
                     "id": libraries[i].id,
+                },
+                "headers": {
+                    "Authorization": libraries[i].key
                 }
             });
     

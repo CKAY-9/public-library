@@ -8,7 +8,30 @@ import { getCookie } from "@/utils/cookies";
 import Link from "next/link";
 import Image from "next/image";
 import { User } from "@prisma/client";
-import { PdfReader } from "pdfreader";
+import { Document, Page, pdfjs } from "react-pdf";
+
+pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+
+export const DocView = (props: {
+    url: string
+}) => {
+    const [numPages, setNumPages] = useState<number>();
+    const [pageNumber, setPageNumber] = useState<number>(1);
+
+    const onDocumentLoadSuccess = ({ numPages }: { numPages: number }): void => {
+        setNumPages(numPages);
+    }
+
+    return (
+        <>
+            <Document file={{
+                "url": props.url
+            }} onLoadSuccess={onDocumentLoadSuccess}>
+                <Page pageNumber={pageNumber} className={style.page}></Page>
+            </Document>
+        </>
+    );
+}
 
 const Comments = (props: {
     content: LibFile,
