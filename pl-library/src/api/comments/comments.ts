@@ -16,7 +16,11 @@ commentsRouter.use(async (req, res, next) => {
 
 // Routes
 commentsRouter.get("/get", async (req, res) => {
-    const comments = await prismaClient.comment.findMany();
+    const comments = await prismaClient.comment.findMany({
+        "where": {
+            "file_id": Number.parseInt(req.query.file_id as string || "0")
+        }
+    });
     return res.status(200).json(comments);
 });
 
