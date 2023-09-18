@@ -25,7 +25,8 @@
         "react-pdf": "^7.3.3",
         "sass": "^1.66.1",
         "sharp": "^0.32.5",
-        "typescript": "5.2.2"
+        "typescript": "5.2.2",
+        "canvas": "file:./src/lib/canvas"
     },
     "devDependencies": {
         "raw-loader": "^4.0.2"

@@ -11,6 +11,7 @@ import { User } from "@prisma/client";
 import { Document, Page, pdfjs } from "react-pdf";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+const imgFormats = [".jpeg", ".jpg", ".webp", ".png", ".gif"]
 
 export const DocView = (props: {
     url: string
@@ -24,11 +25,27 @@ export const DocView = (props: {
 
     return (
         <>
-            <Document file={{
-                "url": props.url
-            }} onLoadSuccess={onDocumentLoadSuccess}>
-                <Page pageNumber={pageNumber} className={style.page}></Page>
-            </Document>
+            {props.url.endsWith(".pdf") && 
+                <Document file={{
+                    "url": props.url
+                }} onLoadSuccess={onDocumentLoadSuccess}>
+                    <Page pageNumber={pageNumber} className={style.page}></Page>
+                </Document>
+            }
+            {imgFormats.map((val: string, index: number) => {
+                if (props.url.endsWith(val)) {
+                    return (
+                        <div key={index}>
+                            <Image src={props.url} alt="Image File" sizes="100%" width={0} height={0} style={{
+                                "width": "100%",
+                                "height": "auto",
+                                "objectFit": "cover",
+                                "borderRadius": "1rem"
+                            }} />
+                        </div>
+                    )
+                }
+            })}
         </>
     );
 }
