@@ -20,7 +20,7 @@ export const POST = async (request: Request) => {
 
     const lib = await prisma.library.findUnique({
         "where": {
-            "id": req.lib || 0
+            "id": Number.parseInt(req.lib || "0")
         }
     });
 
@@ -35,10 +35,10 @@ export const POST = async (request: Request) => {
             "Authorization": lib.key
         },
         "data": {
-            "work": req.work,
+            "work": Number.parseInt(req.work || "0"),
             "user": user.id
         }
     });
 
-    return NextResponse.json({"message": "Liked file"});
+    return NextResponse.json({"message": "Liked file", "new": updateLibrary.data.new});
 }

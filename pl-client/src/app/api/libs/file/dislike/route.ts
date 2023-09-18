@@ -20,7 +20,7 @@ export const POST = async (request: Request) => {
 
     const lib = await prisma.library.findUnique({
         "where": {
-            "id": req.lib || 0
+            "id": Number.parseInt(req.lib.toString() || "0")
         }
     });
 
@@ -40,5 +40,5 @@ export const POST = async (request: Request) => {
         }
     });
 
-    return NextResponse.json({"message": "Disliked file"});
+    return NextResponse.json({"message": "Disliked file", "new": updateLibrary.data.new});
 }

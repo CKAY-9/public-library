@@ -134,7 +134,7 @@ filesRouter.post("/like", async (req, res) => {
 
     const file = await prismaClient.file.findUnique({
         "where": {
-            "id": data.work || 0
+            "id": Number.parseInt(data.work.toString()) || 0
         }
     });
 
@@ -144,7 +144,7 @@ filesRouter.post("/like", async (req, res) => {
 
     let flag = true;
     for (let i = 0; i < file.likes.length; i++) {
-        // This will remove the like if they already did like it
+        // This will remove the like if they already did like it 
         if (file.likes[i].toLowerCase().includes(entry)) {
             file.likes.splice(i);
             flag = false;
@@ -172,7 +172,7 @@ filesRouter.post("/like", async (req, res) => {
         }
     });
 
-    return res.status(200).json({"message": "Updated likes"});
+    return res.status(200).json({"message": "Updated likes", "new": flag});
 });
 
 filesRouter.post("/dislike", async (req, res) => {
@@ -219,5 +219,5 @@ filesRouter.post("/dislike", async (req, res) => {
         }
     });
 
-    return res.status(200).json({"message": "Updated dislikes"});
+    return res.status(200).json({"message": "Updated dislikes", "new": flag});
 });

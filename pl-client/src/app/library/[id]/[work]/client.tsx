@@ -177,6 +177,8 @@ const WorkClient = (props: {
     user: User | null
 }) => {
     const [view, setView] = useState<number>(0);
+    const [likes, setLikes] = useState<number>(props.content.likes.length);
+    const [dislikes, setDislikes] = useState<number>(props.content.dislikes.length);
 
     const setFinished = async (e: BaseSyntheticEvent) => {
         e.preventDefault();
@@ -232,12 +234,21 @@ const WorkClient = (props: {
             "url": "/api/libs/file/like",
             "method": "POST",
             "data": {
-                "workID": props.id
+                "work": props.id,
+                "lib": props.id
             },
             "headers": {
                 "Authorization": getCookie("user_token")
             }
         });
+
+        if (request.data.new !== undefined ) {
+            if (request.data.new) {
+                setLikes(likes + 1);
+            } else {
+                setLikes(likes - 1);
+            }
+        } 
     }
 
     const dislike = async (e: BaseSyntheticEvent) => {
@@ -256,13 +267,21 @@ const WorkClient = (props: {
                 "Authorization": getCookie("user_token")
             }
         });
+
+        if (request.data.new !== undefined ) {
+            if (request.data.new) {
+                setDislikes(dislikes + 1);
+            } else {
+                setDislikes(dislikes - 1);
+            }
+        } 
     }
 
     return (
         <>
             <section style={{"display": "flex", "gap": "1rem"}}>
                 <div style={{"display": "flex", "gap": "0.5rem", "alignItems": "center"}}>
-                    <span>{props.content.likes.length}</span>    
+                    <span>{likes}</span>    
                     <button onClick={like} style={{"backgroundColor": "transparent", "padding": "0.5rem", "display": "grid", "placeContent": "center"}}>
                         <Image src="/thumbs_up.svg" alt="Thumbs Up" sizes="100%" width={0} height={0} style={{
                             "width": "1rem",
@@ -273,7 +292,7 @@ const WorkClient = (props: {
                     </button>
                 </div>
                 <div style={{"display": "flex", "gap": "0.5rem", "alignItems": "center"}}>
-                    <span>{props.content.dislikes.length}</span>    
+                    <span>{dislikes}</span>    
                     <button onClick={dislike} style={{"backgroundColor": "transparent", "padding": "0.5rem", "display": "grid", "placeContent": "center"}}>
                         <Image src="/thumbs_down.svg" alt="Thumbs Down" sizes="100%" width={0} height={0} style={{
                             "width": "1rem",

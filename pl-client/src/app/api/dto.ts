@@ -35,8 +35,8 @@ export interface DeleteLibrary {
 }
 
 export interface Like {
-    lib: number,
-    work: number
+    lib: string,
+    work: string
 }
 
 export interface LibFileFetch {
