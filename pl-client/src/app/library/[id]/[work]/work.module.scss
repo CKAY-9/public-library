@@ -36,6 +36,10 @@
     flex-direction: column;
 }
 
-.page {
-    height: 100%;
+.doc {
+    width: fit-content;
+
+    .page {
+        height: fit-content;
+    }
 }

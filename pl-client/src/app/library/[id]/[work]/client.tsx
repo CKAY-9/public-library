@@ -24,6 +24,16 @@ export const DocView = (props: {
     const [loadingRaw, setLoadingRaw] = useState<boolean>(true);
     const [raw, setRaw] = useState<string>("");
 
+    window.onkeydown = (e) => {
+        if (e.key === "ArrowLeft") {
+            if (pageNumber - 1 < 1) return;
+            setPageNumber(pageNumber - 1);
+        }
+        if (e.key === "ArrowRight") {
+            setPageNumber(pageNumber + 1);
+        }
+    }
+
     useEffect(() => {
         (async () => {
             try {
@@ -51,11 +61,13 @@ export const DocView = (props: {
 
     if (props.url.endsWith(".pdf")) {
         return (
-            <Document file={{
-                "url": props.url
-            }} onLoadSuccess={onDocumentLoadSuccess}>
-                <Page pageNumber={pageNumber} className={style.page}></Page>
-            </Document>
+            <div>
+                <Document file={{
+                    "url": props.url
+                }} className={style.doc} onLoadSuccess={onDocumentLoadSuccess}>
+                    <Page pageNumber={pageNumber} className={style.page}></Page>
+                </Document>
+            </div>
         );
     }
 
