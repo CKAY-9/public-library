@@ -15,7 +15,8 @@
 .container {
     margin: 5rem;
     display: grid;
-    grid-template-columns: 20% 80%;
+    grid-template-columns: 20% 75%;
+    gap: 5%;
 }
 
 .comments {
@@ -31,8 +32,8 @@
 }
 
 .file {
-    display: grid;
-    place-content: center;
+    display: flex;
+    flex-direction: column;
 }
 
 .page {

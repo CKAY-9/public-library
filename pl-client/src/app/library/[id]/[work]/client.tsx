@@ -9,45 +9,83 @@ import Link from "next/link";
 import Image from "next/image";
 import { User } from "@prisma/client";
 import { Document, Page, pdfjs } from "react-pdf";
+import { BASE_URL } from "@/app/api/resources";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 const imgFormats = [".jpeg", ".jpg", ".webp", ".png", ".gif"]
 
 export const DocView = (props: {
-    url: string
+    url: string,
+    hostID: number,
+    workID: number
 }) => {
     const [numPages, setNumPages] = useState<number>();
     const [pageNumber, setPageNumber] = useState<number>(1);
+    const [loadingRaw, setLoadingRaw] = useState<boolean>(true);
+    const [raw, setRaw] = useState<string>("");
+
+    useEffect(() => {
+        (async () => {
+            try {
+                const request = await axios({
+                    "url": BASE_URL + "/api/libs/file/data",
+                    "method": "GET",
+                    "params": {
+                        "host": props.hostID,
+                        "workID": props.workID
+                    }
+                });
+
+                setRaw(request.data.raw);
+            } catch (ex) {
+                console.error(ex);
+            }
+            
+            setLoadingRaw(false);
+        })();
+    }, [props.url]);
 
     const onDocumentLoadSuccess = ({ numPages }: { numPages: number }): void => {
         setNumPages(numPages);
     }
 
+    if (props.url.endsWith(".pdf")) {
+        return (
+            <Document file={{
+                "url": props.url
+            }} onLoadSuccess={onDocumentLoadSuccess}>
+                <Page pageNumber={pageNumber} className={style.page}></Page>
+            </Document>
+        );
+    }
+
+    for (let i = 0; i < imgFormats.length; i++) {
+        if (props.url.toLowerCase().endsWith(imgFormats[i])) {
+            return (
+                <div>
+                    <Image src={props.url} alt="Image File" sizes="100%" width={0} height={0} style={{
+                        "width": "100%",
+                        "height": "auto",
+                        "objectFit": "cover",
+                        "borderRadius": "1rem"
+                    }} />
+                </div>
+            );
+        }
+    }
+
+    if (loadingRaw) {
+        return <span>Loading raw data...</span>
+    }
+
     return (
         <>
-            {props.url.endsWith(".pdf") && 
-                <Document file={{
-                    "url": props.url
-                }} onLoadSuccess={onDocumentLoadSuccess}>
-                    <Page pageNumber={pageNumber} className={style.page}></Page>
-                </Document>
-            }
-            {imgFormats.map((val: string, index: number) => {
-                if (props.url.endsWith(val)) {
-                    return (
-                        <div key={index}>
-                            <Image src={props.url} alt="Image File" sizes="100%" width={0} height={0} style={{
-                                "width": "100%",
-                                "height": "auto",
-                                "objectFit": "cover",
-                                "borderRadius": "1rem"
-                            }} />
-                        </div>
-                    )
-                }
-            })}
+            <span style={{"opacity": "0.5"}}>This is a raw file and contains no available formatting</span>
+            <p>
+                {raw}
+            </p>
         </>
-    );
+    )
 }
 
 const Comments = (props: {
@@ -261,7 +299,7 @@ const WorkClient = (props: {
                 <button onClick={() => setView(1)}>Comments</button>
             </nav>
             <section style={{"display": view === 0 ? "flex" : "none"}}>
-                <p>{props.content.description}</p>
+                <p>{props.content.description.length >= 1 ? props.content.description : "No description provided."}</p>
             </section>
             <section style={{"display": view === 1 ? "flex" : "none"}}>
                 <Comments user={props.user} id={props.id} content={props.content}></Comments>

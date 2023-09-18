@@ -44,7 +44,7 @@ const WorkServer = async (props: {
                     <WorkClient user={user} id={props.id} content={content}></WorkClient>
                 </div>
                 <div className={style.file}>
-                    <DocView url={fileURL}></DocView>
+                    <DocView workID={content.id} hostID={hostInfo.id} url={fileURL}></DocView>
                 </div>
             </main>
         </>

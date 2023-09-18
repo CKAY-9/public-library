@@ -131,14 +131,14 @@ window.onload = () => {
 
     const params = new URLSearchParams(window.location.search);
     switch (params.get("tab")) {
-        case "info":
-            info();
-            break;
         case "keys":
             keys();
             break;
         case "files":
             files();
+            break;
+        default:
+            info();
             break;
     }
 }
